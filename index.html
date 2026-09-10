@@ -3,426 +3,721 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DecaChat - Group Room</title>
+  <title>DecaChat - Premium Group Chat</title>
   
-  <!-- FontAwesome Icons CDN (कोई आइकन डाउनलोड करने की जरूरत नहीं) -->
+  <!-- FontAwesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    /* Animated Gradient Background */
+  <style>
+    :root {
+      --bg-main: #060b17;
+      --card-bg: #0d1527;
+      --card-inner: #131f38;
+      --accent-blue: #007aff;
+      --accent-cyan: #38bdf8;
+      --text-main: #ffffff;
+      --text-muted: #8e9bb2;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --online-green: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+
     body {
-      background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-                  radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-                  #0b0f19;
-      color: #f8fafc;
+      background-color: #020611;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      overflow-x: hidden;
-    }
-
-    /* Glassmorphism Home Card */
-    .card {
-      background: rgba(23, 32, 54, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 40px 32px;
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      text-align: center;
-      width: 90%;
-      max-width: 420px;
-      position: relative;
-    }
-
-    .badge {
-      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(56, 189, 248, 0.12);
-      color: #38bdf8;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 30px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 10px;
     }
 
-    .card h1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 24px;
-    }
-
-    /* Pulsing Glowing Icon Button */
-    .icon-container {
-      position: relative;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-
-    .icon-glow-ring {
-      position: absolute;
-      top: -6px; left: -6px; right: -6px; bottom: -6px;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #0ea5e9, #6366f1);
-      filter: blur(12px);
-      opacity: 0.6;
-      animation: pulse 3s infinite ease-in-out;
-      z-index: 0;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.1); opacity: 0.85; }
-    }
-
-    .icon-btn {
-      position: relative;
-      z-index: 1;
-      width: 96px;
-      height: 96px;
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 2px solid rgba(56, 189, 248, 0.3);
-      border-radius: 50%;
-      color: #38bdf8;
-      font-size: 38px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .icon-btn:hover {
-      transform: scale(1.08) translateY(-3px);
-      border-color: #38bdf8;
-      color: #fff;
-      box-shadow: 0 15px 30px rgba(14, 165, 233, 0.35);
-    }
-
-    .subtitle {
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Input Field Styling */
-    .input-wrap {
-      position: relative;
-      margin: 18px 0 12px;
-    }
-
-    .input-wrap i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #64748b;
-      font-size: 16px;
-    }
-
-    .input-box {
+    /* Mobile App Frame Mockup */
+    .app-viewport {
       width: 100%;
-      padding: 13px 14px 13px 44px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: #0b1120;
-      color: #fff;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .input-box:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-      transition: all 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.45);
-    }
-
-    /* Chat Room Screen */
-    #chat-screen {
-      display: none;
-      width: 95%;
-      max-width: 950px;
-      height: 88vh;
-      background: rgba(23, 32, 54, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+      max-width: 440px;
+      height: 92vh;
+      background: var(--bg-main);
+      border-radius: 36px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 122, 255, 0.15);
+      display: flex;
       flex-direction: column;
+      overflow: hidden;
+      position: relative;
     }
 
-    .chat-header {
-      background: rgba(15, 23, 42, 0.7);
-      padding: 16px 24px;
+    /* Top Mobile Bar */
+    .status-bar {
+      height: 38px;
+      padding: 0 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      z-index: 10;
     }
 
-    .header-info h3 {
-      font-size: 17px;
-      font-weight: 700;
+    /* Screens Base */
+    .screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      display: none;
+    }
+    .screen.active { display: flex; }
+
+    /* =========================================
+       SCREEN 1: HOME SCREEN
+       ========================================= */
+    .home-header {
+      padding: 10px 22px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .app-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, #007aff, #00c6ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4);
+    }
+    .title-area h2 { font-size: 20px; font-weight: 700; }
+    .title-area p { font-size: 12px; color: var(--text-muted); }
+
+    .header-icons { display: flex; gap: 12px; }
+    .circle-icon-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .home-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Status Pills */
+    .status-row { display: flex; gap: 10px; }
+    .pill {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      color: var(--text-muted);
     }
+    .pill b { color: #fff; font-weight: 600; }
+    .dot-green { width: 7px; height: 7px; border-radius: 50%; background: var(--online-green); box-shadow: 0 0 8px var(--online-green); }
 
-    .header-info span {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    .exit-btn {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      display: inline-flex;
+    /* Action Banner */
+    .join-banner {
+      background: linear-gradient(135deg, #0d1a38, #112652);
+      border: 1px solid rgba(0, 122, 255, 0.3);
+      padding: 18px;
+      border-radius: 20px;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
-
-    .exit-btn:hover {
-      background: #ef4444;
+    .join-banner-left { display: flex; align-items: center; gap: 14px; }
+    .hash-box {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-blue);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
       color: #fff;
     }
+    .join-banner-text h4 { font-size: 15px; font-weight: 700; }
+    .join-banner-text p { font-size: 12px; color: var(--text-muted); }
 
-    .chat-main {
+    .section-title {
       display: flex;
-      flex: 1;
-      overflow: hidden;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .section-title h3 { font-size: 16px; font-weight: 700; }
+    .section-title a { font-size: 12px; color: var(--accent-cyan); text-decoration: none; }
+
+    /* Room Cards */
+    .room-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 14px 16px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .room-item:hover { transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.3); }
+    .room-item-left { display: flex; align-items: center; gap: 14px; }
+    .room-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+    }
+    .room-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .room-meta { font-size: 12px; color: var(--text-muted); }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      height: 68px;
+      background: rgba(13, 21, 39, 0.95);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .nav-btn.active { color: var(--accent-cyan); }
+    .nav-btn i { font-size: 18px; }
+    .nav-btn-center {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #007aff, #00c6ff);
+      border-radius: 50%;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -24px;
+      box-shadow: 0 10px 25px rgba(0, 122, 255, 0.5);
+      cursor: pointer;
     }
 
-    .chat-messages {
+    /* =========================================
+       SCREEN 2: ENTER ROOM CODE SCREEN
+       ========================================= */
+    .nav-back-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .back-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .nav-back-header h3 {
       flex: 1;
-      padding: 20px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      margin-right: 18px;
+    }
+
+    .enter-room-body {
+      flex: 1;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .bubble-hero {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #007aff, #08214d);
+      box-shadow: 0 0 35px rgba(0, 122, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      color: #fff;
+      margin-bottom: 26px;
+    }
+
+    .enter-room-body h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .enter-room-body p { font-size: 13px; color: var(--text-muted); margin-bottom: 26px; max-width: 260px; }
+
+    .code-input-box {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1.5px solid rgba(0, 122, 255, 0.4);
+      padding: 16px 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .code-input-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+      text-transform: uppercase;
+    }
+    .code-input-box input::placeholder { color: #5a6e91; text-transform: none; }
+
+    .action-btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #007aff, #00b4d8);
+      border: none;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 122, 255, 0.35);
+    }
+
+    /* =========================================
+       SCREEN 3: CHAT SCREEN
+       ========================================= */
+    .chat-topbar {
+      padding: 12px 18px;
+      background: rgba(13, 21, 39, 0.95);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-room-info { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .chat-room-avatar {
+      width: 40px;
+      height: 40px;
+      background: #007aff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+    }
+    .chat-title-group h4 { font-size: 15px; font-weight: 700; }
+    .chat-title-group p { font-size: 11px; color: var(--accent-cyan); display: flex; align-items: center; gap: 6px; }
+
+    .chat-area {
+      flex: 1;
+      padding: 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: rgba(11, 17, 32, 0.5);
+      gap: 14px;
+      background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.03) 0%, transparent 80%);
     }
 
-    /* Sidebar Members */
-    .sidebar {
-      width: 220px;
-      background: rgba(15, 23, 42, 0.6);
-      border-left: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 18px;
-      overflow-y: auto;
+    .date-badge {
+      align-self: center;
+      background: var(--card-inner);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
     }
 
-    .sidebar h4 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #94a3b8;
-      margin-bottom: 14px;
+    /* Chat Messages Styles */
+    .chat-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      gap: 10px;
+      align-items: flex-end;
+      max-width: 82%;
     }
+    .chat-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+    .chat-row.other { align-self: flex-start; }
 
-    .sidebar ul { list-style: none; }
-
-    .sidebar li {
-      font-size: 14px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 8px;
-      margin-bottom: 8px;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .online-dot {
-      width: 8px;
-      height: 8px;
+    .msg-user-avatar {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
-    }
-
-    /* Chat Bubbles */
-    .msg {
-      max-width: 65%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height: 1.5;
-      word-break: break-word;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .msg.other {
       background: #1e293b;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
     }
 
-    .msg.mine {
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      align-self: flex-end;
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 18px;
+      position: relative;
+    }
+    .chat-row.other .msg-bubble {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+      color: #e2e8f0;
+    }
+    .chat-row.mine .msg-bubble {
+      background: linear-gradient(135deg, #007aff, #0062cc);
       border-bottom-right-radius: 4px;
       color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
     }
 
-    .msg .sender-name {
+    .msg-sender {
       font-size: 11px;
       font-weight: 700;
-      color: #93c5fd;
+      color: var(--accent-cyan);
       margin-bottom: 3px;
+    }
+    .msg-text { font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .msg-time {
+      font-size: 10px;
+      opacity: 0.7;
+      text-align: right;
+      margin-top: 4px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      justify-content: flex-end;
+      gap: 4px;
     }
 
-    .chat-footer {
-      padding: 16px 20px;
-      background: rgba(15, 23, 42, 0.7);
+    /* Chat Input Bar */
+    .chat-input-bar {
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
       display: flex;
-      gap: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      align-items: center;
+      gap: 10px;
     }
-
-    .chat-footer input {
+    .chat-input-field {
       flex: 1;
-      padding: 12px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: #0b1120;
-      color: #fff;
-      outline: none;
-      font-size: 15px;
-    }
-
-    .chat-footer input:focus {
-      border-color: #38bdf8;
-    }
-
-    .chat-footer button {
-      padding: 12px 22px;
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 10px 16px;
+      display: flex;
       align-items: center;
+      gap: 10px;
+    }
+    .chat-input-field input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 14px;
+      width: 100%;
+    }
+    .chat-input-field input::placeholder { color: var(--text-muted); }
+    .chat-send-btn {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-blue);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+    }
+
+    /* =========================================
+       SCREEN 4: MEMBERS SCREEN
+       ========================================= */
+    .members-list {
+      flex: 1;
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .member-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .member-item-left { display: flex; align-items: center; gap: 12px; }
+    .member-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+    .member-role {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+    .member-role.admin { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+    .leave-room-footer {
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+    }
+    .leave-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
     }
   </style>
 </head>
 <body>
 
-  <!-- Home / Join Room Screen -->
-  <div class="card" id="home-screen">
-    <div class="badge">
-      <i class="fa-solid fa-users"></i> Max 10 Members
-    </div>
-    <h1>Group Chat</h1>
+  <div class="app-viewport">
     
-    <div class="icon-container">
-      <div class="icon-glow-ring"></div>
-      <button class="icon-btn" onclick="openRoomInput()" title="Join Group Room">
-        <i class="fa-solid fa-comments"></i>
-      </button>
-    </div>
-
-    <p class="subtitle">आइकन पर क्लिक करें और रूम कोड डालकर चैट शुरू करें</p>
-
-    <div id="room-input-box" style="display: none; margin-top: 10px;">
-      <div class="input-wrap">
-        <i class="fa-solid fa-key"></i>
-        <input type="text" id="roomCodeInput" class="input-box" placeholder="रूम कोड दर्ज करें (उदा: 7788)" />
+    <!-- Top Mobile Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <i class="fa-solid fa-signal" style="font-size: 11px;"></i>
+        <i class="fa-solid fa-wifi" style="font-size: 11px;"></i>
+        <i class="fa-solid fa-battery-full" style="font-size: 14px;"></i>
       </div>
-      <button class="btn" onclick="joinRoom()">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Join Room
-      </button>
     </div>
+
+    <!-- ==================== 1. HOME SCREEN ==================== -->
+    <div class="screen active" id="screen-home">
+      <div class="home-header">
+        <div class="logo-area">
+          <div class="app-icon"><i class="fa-solid fa-comment-dots"></i></div>
+          <div class="title-area">
+            <h2>Group Chat</h2>
+            <p>Connect • Share • Together</p>
+          </div>
+        </div>
+        <div class="header-icons">
+          <div class="circle-icon-btn" onclick="changeNamePrompt()"><i class="fa-regular fa-user"></i></div>
+        </div>
+      </div>
+
+      <div class="home-content">
+        <div class="status-row">
+          <div class="pill"><span class="dot-green"></span> Online Now</div>
+          <div class="pill"><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i> Max <b>10 Members</b></div>
+        </div>
+
+        <div class="join-banner" onclick="showScreen('screen-join')">
+          <div class="join-banner-left">
+            <div class="hash-box"><i class="fa-solid fa-hashtag"></i></div>
+            <div class="join-banner-text">
+              <h4>Join a Room</h4>
+              <p>Enter room code to join</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--accent-cyan);"></i>
+        </div>
+
+        <div class="section-title">
+          <h3>Quick Rooms</h3>
+          <a href="#" onclick="showScreen('screen-join')">Join with Code →</a>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('StudyGroup')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #007aff;">S</div>
+            <div>
+              <div class="room-name">Study Group</div>
+              <div class="room-meta">Code: StudyGroup • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('Friends10')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #8b5cf6;">F</div>
+            <div>
+              <div class="room-name">Friends Forever</div>
+              <div class="room-meta">Code: Friends10 • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('TechGroup')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #10b981;">T</div>
+            <div>
+              <div class="room-name">Tech & Coding</div>
+              <div class="room-meta">Code: TechGroup • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-btn active"><i class="fa-solid fa-house"></i>Home</button>
+        <button class="nav-btn-center" onclick="showScreen('screen-join')"><i class="fa-solid fa-plus"></i></button>
+        <button class="nav-btn" onclick="changeNamePrompt()"><i class="fa-regular fa-user"></i>Profile</button>
+      </div>
+    </div>
+
+    <!-- ==================== 2. JOIN ROOM SCREEN ==================== -->
+    <div class="screen" id="screen-join">
+      <div class="nav-back-header">
+        <button class="back-btn" onclick="showScreen('screen-home')"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3>Join Room</h3>
+      </div>
+
+      <div class="enter-room-body">
+        <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
+        <h2>Enter Room Code</h2>
+        <p>Ask your friend for the room code and join the private group.</p>
+
+        <div class="code-input-box">
+          <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 18px;"></i>
+          <input type="text" id="customRoomInput" placeholder="e.g. 7F3K9Q" />
+        </div>
+
+        <button class="action-btn-primary" onclick="handleJoinSubmit()">
+          Join Room <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== 3. CHAT SCREEN ==================== -->
+    <div class="screen" id="screen-chat">
+      <div class="chat-topbar">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="back-btn" onclick="leaveChat()"><i class="fa-solid fa-arrow-left"></i></button>
+          <div class="chat-room-info" onclick="showScreen('screen-members')">
+            <div class="chat-room-avatar" id="chatRoomAvatar">S</div>
+            <div class="chat-title-group">
+              <h4 id="chatRoomHeaderTitle">Study Group</h4>
+              <p><span class="dot-green"></span> <span id="onlineCountText">0/10 Online</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="circle-icon-btn" onclick="showScreen('screen-members')"><i class="fa-solid fa-ellipsis-vertical"></i></div>
+      </div>
+
+      <div class="chat-area" id="chatMessages">
+        <div class="date-badge">Today</div>
+      </div>
+
+      <div class="chat-input-bar">
+        <div class="chat-input-field">
+          <i class="fa-regular fa-face-smile" style="color: var(--text-muted);"></i>
+          <input type="text" id="messageInputField" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMsg()" />
+        </div>
+        <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <!-- ==================== 4. ROOM MEMBERS SCREEN ==================== -->
+    <div class="screen" id="screen-members">
+      <div class="nav-back-header">
+        <button class="back-btn" onclick="showScreen('screen-chat')"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3>Room Members</h3>
+      </div>
+
+      <div style="padding: 10px 20px 0;">
+        <div style="font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between;">
+          <span>Active Users (<span id="memberCountBadge">0</span>/10)</span>
+          <span style="color: var(--online-green);">● All Online</span>
+        </div>
+      </div>
+
+      <div class="members-list" id="memberList"></div>
+
+      <div class="leave-room-footer">
+        <button class="leave-btn" onclick="leaveChat()">
+          <i class="fa-solid fa-right-from-bracket"></i> Leave Room
+        </button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Chat Screen -->
-  <div id="chat-screen">
-    <div class="chat-header">
-      <div class="header-info">
-        <h3 id="displayRoomCode"><i class="fa-solid fa-hashtag" style="color: #38bdf8;"></i> Room: ----</h3>
-        <span><i class="fa-solid fa-shield-halved"></i> प्राइवेट 10-पर्सन एंड-टू-एंड चैनल</span>
-      </div>
-      <button class="exit-btn" onclick="leaveRoom()">
-        <i class="fa-solid fa-right-from-bracket"></i> Exit
-      </button>
-    </div>
-    
-    <div class="chat-main">
-      <div class="chat-messages" id="messagesList"></div>
-      
-      <!-- Side Bar: कितने लोग Join हैं -->
-      <div class="sidebar">
-        <h4><i class="fa-solid fa-user-group"></i> Active (<span id="userCount">0</span>/10)</h4>
-        <ul id="userList"></ul>
-      </div>
-    </div>
-
-    <div class="chat-footer">
-      <input type="text" id="msgInput" placeholder="अपना मैसेज लिखें..." onkeypress="handleKeyPress(event)" />
-      <button onclick="sendMessage()">
-        <span>Send</span>
-        <i class="fa-solid fa-paper-plane"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Firebase Scripts -->
+  <!-- Firebase 8 SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -440,116 +735,161 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let userName = localStorage.getItem("chat_username") || "";
-    let currentRoom = "";
-    let userRef = null;
+    let currentUser = localStorage.getItem("chat_username") || "";
+    let activeRoom = "";
+    let userKeyRef = null;
 
-    function openRoomInput() {
-      if (!userName) {
-        userName = prompt("कृपया अपना नाम दर्ज करें:");
-        if (!userName || userName.trim() === "") {
-          alert("नाम दर्ज करना जरूरी है!");
-          userName = "";
-          return;
-        }
-        localStorage.setItem("chat_username", userName.trim());
-      }
-      document.getElementById("room-input-box").style.display = "block";
-      document.getElementById("roomCodeInput").focus();
+    // स्क्रीन नेविगेशन
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(screenId).classList.add("active");
     }
 
-    function joinRoom() {
-      const room = document.getElementById("roomCodeInput").value.trim();
-      if (!room) {
-        alert("कृपया एक रूम कोड दर्ज करें!");
+    // नाम सेट / चेंज
+    function checkUserName() {
+      if (!currentUser) {
+        currentUser = prompt("कृपया अपना नाम दर्ज करें:");
+        if (!currentUser || currentUser.trim() === "") {
+          currentUser = "User_" + Math.floor(Math.random() * 900 + 100);
+        }
+        localStorage.setItem("chat_username", currentUser.trim());
+      }
+      return currentUser;
+    }
+
+    function changeNamePrompt() {
+      const newName = prompt("नया नाम दर्ज करें:", currentUser);
+      if (newName && newName.trim() !== "") {
+        currentUser = newName.trim();
+        localStorage.setItem("chat_username", currentUser);
+        alert("नाम अपडेट हो गया: " + currentUser);
+      }
+    }
+
+    function quickJoinRoom(code) {
+      joinRoomProcess(code);
+    }
+
+    function handleJoinSubmit() {
+      const code = document.getElementById("customRoomInput").value.trim().toUpperCase();
+      if (!code) {
+        alert("कृपया रूम कोड दर्ज करें!");
         return;
       }
-      currentRoom = room;
+      joinRoomProcess(code);
+    }
 
-      const roomUsersRef = db.ref(`rooms/${currentRoom}/users`);
+    // रूम जॉइन लॉजिक
+    function joinRoomProcess(roomCode) {
+      checkUserName();
+      activeRoom = roomCode;
 
-      // 10 यूजर की लिमिट चेक
+      const roomUsersRef = db.ref(`rooms/${activeRoom}/users`);
+
       roomUsersRef.once("value", (snapshot) => {
         const users = snapshot.val() || {};
         const count = Object.keys(users).length;
 
         if (count >= 10) {
-          alert("माफ़ करें! इस रूम में पहले से 10 लोग पूरे हो चुके हैं।");
+          alert("माफ़ करें! यह रूम फुल है (अधिकतम 10 लोग)।");
           return;
         }
 
-        userRef = roomUsersRef.push();
-        userRef.set({ name: userName });
-        userRef.onDisconnect().remove();
+        // यूजर को डेटाबेस में जोड़ें
+        userKeyRef = roomUsersRef.push();
+        userKeyRef.set({ name: currentUser, joinedAt: Date.now() });
+        userKeyRef.onDisconnect().remove();
 
-        document.getElementById("home-screen").style.display = "none";
-        document.getElementById("chat-screen").style.display = "flex";
-        document.getElementById("displayRoomCode").innerHTML = `<i class="fa-solid fa-hashtag" style="color: #38bdf8;"></i> Room: ${currentRoom}`;
+        // UI अपडेट करें
+        document.getElementById("chatRoomHeaderTitle").innerText = activeRoom;
+        document.getElementById("chatRoomAvatar").innerText = activeRoom.charAt(0).toUpperCase();
 
-        listenMessages();
-        listenUsers();
+        showScreen("screen-chat");
+        listenToMessages();
+        listenToUsers();
       });
     }
 
-    function listenUsers() {
-      db.ref(`rooms/${currentRoom}/users`).on("value", (snapshot) => {
+    // यूजर्स लाइव लिस्ट
+    function listenToUsers() {
+      db.ref(`rooms/${activeRoom}/users`).on("value", (snapshot) => {
         const users = snapshot.val() || {};
-        const userList = document.getElementById("userList");
-        userList.innerHTML = "";
-        
-        const count = Object.keys(users).length;
-        document.getElementById("userCount").innerText = count;
+        const memberList = document.getElementById("memberList");
+        memberList.innerHTML = "";
 
-        for (let key in users) {
-          const li = document.createElement("li");
-          li.innerHTML = `<span class="online-dot"></span> <i class="fa-regular fa-user" style="font-size:12px; color:#94a3b8;"></i> ${users[key].name}`;
-          userList.appendChild(li);
+        const count = Object.keys(users).length;
+        document.getElementById("onlineCountText").innerText = `${count}/10 Online`;
+        document.getElementById("memberCountBadge").innerText = count;
+
+        let index = 0;
+        for (let id in users) {
+          const user = users[id];
+          const isMe = user.name === currentUser;
+          const div = document.createElement("div");
+          div.className = "member-item";
+          div.innerHTML = `
+            <div class="member-item-left">
+              <div class="member-avatar">${user.name.charAt(0).toUpperCase()}</div>
+              <div>
+                <div style="font-size: 14px; font-weight:600;">${user.name} ${isMe ? "(You)" : ""}</div>
+                <div style="font-size: 11px; color: var(--online-green);">● Online</div>
+              </div>
+            </div>
+            <span class="member-role ${index === 0 ? 'admin' : ''}">${index === 0 ? 'Admin' : 'Member'}</span>
+          `;
+          memberList.appendChild(div);
+          index++;
         }
       });
     }
 
-    function listenMessages() {
-      const messagesList = document.getElementById("messagesList");
-      messagesList.innerHTML = "";
+    // मैसेज लिसनर
+    function listenToMessages() {
+      const messagesContainer = document.getElementById("chatMessages");
+      messagesContainer.innerHTML = `<div class="date-badge">Today</div>`;
 
-      db.ref(`rooms/${currentRoom}/messages`).on("child_added", (snapshot) => {
+      db.ref(`rooms/${activeRoom}/messages`).on("child_added", (snapshot) => {
         const data = snapshot.val();
-        const msgDiv = document.createElement("div");
-        msgDiv.classList.add("msg");
-        msgDiv.classList.add(data.sender === userName ? "mine" : "other");
+        const isMine = data.sender === currentUser;
 
-        msgDiv.innerHTML = `
-          <div class="sender-name">
-            <i class="fa-regular fa-circle-user"></i> ${data.sender}
+        const row = document.createElement("div");
+        row.className = `chat-row ${isMine ? 'mine' : 'other'}`;
+
+        const timeStr = data.time ? new Date(data.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+        row.innerHTML = `
+          <div class="msg-user-avatar">${data.sender.charAt(0).toUpperCase()}</div>
+          <div class="msg-bubble">
+            ${!isMine ? `<div class="msg-sender">${data.sender}</div>` : ''}
+            <div class="msg-text">${data.text}</div>
+            <div class="msg-time">${timeStr} ${isMine ? '<i class="fa-solid fa-check-double" style="font-size:9px; color:#93c5fd;"></i>' : ''}</div>
           </div>
-          <div>${data.text}</div>
         `;
-        messagesList.appendChild(msgDiv);
-        messagesList.scrollTop = messagesList.scrollHeight;
+
+        messagesContainer.appendChild(row);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
       });
     }
 
-    function sendMessage() {
-      const input = document.getElementById("msgInput");
-      const text = input.value.trim();
-      if (!text) return;
+    // मैसेज भेजना
+    function sendMsg() {
+      const input = document.getElementById("messageInputField");
+      const msg = input.value.trim();
+      if (!msg) return;
 
-      db.ref(`rooms/${currentRoom}/messages`).push({
-        sender: userName,
-        text: text,
+      db.ref(`rooms/${activeRoom}/messages`).push({
+        sender: currentUser,
+        text: msg,
         time: Date.now()
       });
 
       input.value = "";
     }
 
-    function handleKeyPress(e) {
-      if (e.key === "Enter") sendMessage();
-    }
-
-    function leaveRoom() {
-      if (userRef) userRef.remove();
-      location.reload();
+    // रूम छोड़ना
+    function leaveChat() {
+      if (userKeyRef) userKeyRef.remove();
+      showScreen("screen-home");
     }
   </script>
 </body>
