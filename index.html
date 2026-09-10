@@ -34,34 +34,47 @@
       width: 100%;
       height: 100%;
       background-color: var(--bg-main);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.06) 0px, transparent 50%);
       color: var(--text-main);
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    /* Screen Management */
+    /* Main App Shell */
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Screens Base */
     .screen {
       display: none;
       width: 100%;
-      min-height: 100%;
-    }
-    .screen.active {
-      display: flex;
+      height: 100%;
       flex-direction: column;
+      position: relative;
     }
+    .screen.active { display: flex; }
 
+    /* Home & Join Layout */
     .web-container {
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      padding: 16px 18px 90px;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      padding: 16px 18px 85px;
+      overflow-y: auto;
     }
 
     /* HOME SCREEN */
     .home-header {
-      padding: 10px 0 10px;
+      padding: 10px 0 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -95,7 +108,7 @@
       font-size: 16px;
     }
 
-    .status-row { display: flex; gap: 10px; }
+    .status-row { display: flex; gap: 10px; margin-bottom: 14px; }
     .pill {
       flex: 1;
       background: var(--card-bg);
@@ -120,6 +133,7 @@
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
+      margin-bottom: 14px;
     }
     .join-banner-left { display: flex; align-items: center; gap: 14px; }
     .hash-box {
@@ -140,7 +154,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 4px;
+      margin: 4px 0 10px;
     }
     .section-title h3 { font-size: 15px; font-weight: 700; }
     .section-title a { font-size: 12px; color: var(--accent-cyan); text-decoration: none; }
@@ -154,7 +168,10 @@
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s;
     }
+    .room-item:hover { border-color: rgba(56, 189, 248, 0.3); }
     .room-item-left { display: flex; align-items: center; gap: 12px; }
     .room-avatar {
       width: 42px;
@@ -170,19 +187,19 @@
     .room-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .room-meta { font-size: 11px; color: var(--text-muted); }
 
+    /* Bottom Navigation Bar */
     .bottom-nav {
-      position: fixed;
+      position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 64px;
       background: rgba(13, 21, 39, 0.98);
-      backdrop-filter: blur(10px);
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
       align-items: center;
-      z-index: 100;
+      z-index: 20;
     }
     .nav-btn {
       background: none;
@@ -236,7 +253,6 @@
 
     .enter-room-body {
       flex: 1;
-      padding: 30px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -292,34 +308,58 @@
     }
 
     /* =========================================
-       CHAT SCREEN FIX FOR MOBILE & DESKTOP
+       CHAT SCREEN: MOBILE & LAPTOP PERFECT FIT
        ========================================= */
-    #screen-chat.active {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .chat-container {
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
       background: var(--bg-main);
-      z-index: 50;
+      position: relative;
+    }
+
+    /* Laptop Desktop Container */
+    @media (min-width: 768px) {
+      .chat-container {
+        max-width: 780px;
+        height: 92vh;
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        overflow: hidden;
+      }
+      .web-container {
+        max-width: 550px;
+        height: 92vh;
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      }
+      .bottom-nav {
+        max-width: 550px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 0 0 24px 24px;
+      }
     }
 
     .chat-topbar {
-      height: 60px;
-      padding: 0 16px;
+      height: 64px;
+      padding: 0 18px;
       background: rgba(13, 21, 39, 0.98);
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
+      z-index: 10;
     }
     .chat-room-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .chat-room-avatar {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       background: #007aff;
       border-radius: 10px;
       display: flex;
@@ -331,12 +371,11 @@
     .chat-title-group h4 { font-size: 15px; font-weight: 700; }
     .chat-title-group p { font-size: 11px; color: var(--accent-cyan); display: flex; align-items: center; gap: 5px; }
 
-    /* मैसेज एरिया - फुल स्क्रोल और स्पेसिंग */
+    /* मैसेज एरिया - लैपटॉप और मोबाइल दोनों पर स्क्रोल */
     .chat-area {
       flex: 1;
       padding: 16px;
-      padding-bottom: 80px; /* इनपुट बार के लिए जगह */
-      overflow-y: scroll;
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
@@ -357,7 +396,7 @@
       display: flex;
       gap: 10px;
       align-items: flex-end;
-      max-width: 85%;
+      max-width: 80%;
     }
     .chat-row.mine { align-self: flex-end; flex-direction: row-reverse; }
     .chat-row.other { align-self: flex-start; }
@@ -394,29 +433,24 @@
       color: #fff;
     }
 
-    .msg-sender { font-size: 11px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px; }
+    .msg-sender { font-size: 10px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px; }
     .msg-text { font-size: 14px; line-height: 1.4; }
     .msg-time { font-size: 10px; opacity: 0.7; text-align: right; margin-top: 3px; }
 
-    /* इनपुट बार को स्क्रीन के नीचे परमानेंट लॉक किया गया */
+    /* इनपुट बार: हमेशा कंटेनर के बॉटम में चिपका रहेगा */
     .chat-input-bar-container {
-      position: fixed;
-      bottom: 0;
-      left: 0;
+      flex-shrink: 0;
       width: 100%;
       background: #0d1527;
       border-top: 1px solid var(--border-color);
-      padding: 10px 14px;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
+      padding: 12px 16px;
+      z-index: 10;
     }
     .chat-input-bar {
       display: flex;
       align-items: center;
       gap: 10px;
       width: 100%;
-      max-width: 600px;
     }
     .chat-input-field {
       flex: 1;
@@ -448,30 +482,26 @@
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 122, 255, 0.4);
     }
 
     /* MEMBERS SCREEN */
-    #screen-members.active {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .members-container {
       width: 100%;
+      max-width: 600px;
       height: 100%;
-      background: var(--bg-main);
-      z-index: 60;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
+      padding: 16px 18px;
     }
     .members-list {
       flex: 1;
-      padding: 16px 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
+      margin: 10px 0;
     }
     .member-item {
       background: var(--card-bg);
@@ -494,14 +524,6 @@
       font-weight: 700;
       color: var(--accent-cyan);
     }
-    .leave-room-footer {
-      padding: 14px 20px 24px;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border-color);
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-    }
     .leave-btn {
       width: 100%;
       padding: 14px;
@@ -518,7 +540,7 @@
       gap: 8px;
     }
 
-    /* IN-APP MODAL FOR ASKING NAME (NO BROWSER POPUP BLOCK) */
+    /* Name Modal */
     .name-modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -542,165 +564,167 @@
 </head>
 <body>
 
-  <!-- In-App Custom Name Modal -->
-  <div class="name-modal-overlay" id="nameModal">
-    <div class="name-modal-box">
-      <div style="font-size: 36px; margin-bottom: 10px;">👋</div>
-      <h3 style="margin-bottom: 6px;">अपना नाम दर्ज करें</h3>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">चैट में आपके दोस्तों को यही नाम दिखेगा</p>
-      <input type="text" id="modalNameInput" placeholder="उदा: Rahul / Rohit" style="width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--card-inner); border: 1px solid var(--border-color); color: #fff; font-size: 15px; outline: none; margin-bottom: 14px;">
-      <button class="action-btn-primary" onclick="saveNameFromModal()">Save & Continue</button>
-    </div>
-  </div>
+  <div class="app-wrapper">
 
-  <!-- 1. HOME SCREEN -->
-  <div class="screen active" id="screen-home">
-    <div class="web-container">
-      <div class="home-header">
-        <div class="logo-area">
-          <div class="app-icon"><i class="fa-solid fa-comment-dots"></i></div>
-          <div class="title-area">
-            <h2>Group Chat</h2>
-            <p>Connect • Share • Together</p>
+    <!-- Modal for Name -->
+    <div class="name-modal-overlay" id="nameModal">
+      <div class="name-modal-box">
+        <div style="font-size: 36px; margin-bottom: 10px;">👋</div>
+        <h3 style="margin-bottom: 6px;">अपना नाम दर्ज करें</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">ग्रुप में आपका यही नाम दिखेगा</p>
+        <input type="text" id="modalNameInput" placeholder="उदा: Rahul / Rohit" style="width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--card-inner); border: 1px solid var(--border-color); color: #fff; font-size: 15px; outline: none; margin-bottom: 14px;">
+        <button class="action-btn-primary" onclick="saveNameFromModal()">Save & Continue</button>
+      </div>
+    </div>
+
+    <!-- 1. HOME SCREEN -->
+    <div class="screen active" id="screen-home">
+      <div class="web-container">
+        <div class="home-header">
+          <div class="logo-area">
+            <div class="app-icon"><i class="fa-solid fa-comment-dots"></i></div>
+            <div class="title-area">
+              <h2>Group Chat</h2>
+              <p>Connect • Share • Together</p>
+            </div>
+          </div>
+          <div class="circle-icon-btn" onclick="openNameModal(true)">
+            <i class="fa-regular fa-user"></i>
           </div>
         </div>
-        <div class="circle-icon-btn" onclick="openNameModal(true)">
-          <i class="fa-regular fa-user"></i>
+
+        <div class="status-row">
+          <div class="pill"><span class="dot-green"></span> Online Now</div>
+          <div class="pill"><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i> Max <b>10 Members</b></div>
+        </div>
+
+        <div class="join-banner" onclick="showScreen('screen-join')">
+          <div class="join-banner-left">
+            <div class="hash-box"><i class="fa-solid fa-hashtag"></i></div>
+            <div class="join-banner-text">
+              <h4>Join a Room</h4>
+              <p>Enter room code to join</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--accent-cyan);"></i>
+        </div>
+
+        <div class="section-title">
+          <h3>Quick Rooms</h3>
+          <a href="#" onclick="showScreen('screen-join')">Join with Code →</a>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('StudyGroup')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #007aff;">S</div>
+            <div>
+              <div class="room-name">Study Group</div>
+              <div class="room-meta">Code: StudyGroup • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('Friends10')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #8b5cf6;">F</div>
+            <div>
+              <div class="room-name">Friends Forever</div>
+              <div class="room-meta">Code: Friends10 • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+
+        <div class="room-item" onclick="quickJoinRoom('TechGroup')">
+          <div class="room-item-left">
+            <div class="room-avatar" style="background: #10b981;">T</div>
+            <div>
+              <div class="room-name">Tech & Coding</div>
+              <div class="room-meta">Code: TechGroup • 10 Max</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-btn active"><i class="fa-solid fa-house"></i>Home</button>
+          <button class="nav-btn-center" onclick="showScreen('screen-join')"><i class="fa-solid fa-plus"></i></button>
+          <button class="nav-btn" onclick="openNameModal(true)"><i class="fa-regular fa-user"></i>Profile</button>
         </div>
       </div>
+    </div>
 
-      <div class="status-row">
-        <div class="pill"><span class="dot-green"></span> Online Now</div>
-        <div class="pill"><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i> Max <b>10 Members</b></div>
+    <!-- 2. JOIN ROOM SCREEN -->
+    <div class="screen" id="screen-join">
+      <div class="web-container">
+        <div class="nav-back-header">
+          <button class="back-btn" onclick="showScreen('screen-home')"><i class="fa-solid fa-arrow-left"></i></button>
+          <h3>Join Room</h3>
+        </div>
+
+        <div class="enter-room-body">
+          <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
+          <h2 style="font-size:22px; font-weight:700; margin-bottom:6px;">Enter Room Code</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ask your friend for the room code.</p>
+
+          <div class="code-input-box">
+            <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 16px;"></i>
+            <input type="text" id="customRoomInput" placeholder="e.g. 82982" />
+          </div>
+
+          <button class="action-btn-primary" onclick="handleJoinSubmit()">Join Room</button>
+        </div>
       </div>
+    </div>
 
-      <div class="join-banner" onclick="showScreen('screen-join')">
-        <div class="join-banner-left">
-          <div class="hash-box"><i class="fa-solid fa-hashtag"></i></div>
-          <div class="join-banner-text">
-            <h4>Join a Room</h4>
-            <p>Enter room code to join</p>
+    <!-- 3. CHAT SCREEN (MOBILE & LAPTOP PROPER FIT) -->
+    <div class="screen" id="screen-chat">
+      <div class="chat-container">
+        <div class="chat-topbar">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="back-btn" onclick="leaveChat()"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="chat-room-info" onclick="showScreen('screen-members')">
+              <div class="chat-room-avatar" id="chatRoomAvatar">R</div>
+              <div class="chat-title-group">
+                <h4 id="chatRoomHeaderTitle">Room</h4>
+                <p><span class="dot-green"></span> <span id="onlineCountText">1/10 Online</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="circle-icon-btn" onclick="showScreen('screen-members')"><i class="fa-solid fa-users"></i></div>
+        </div>
+
+        <div class="chat-area" id="chatMessages">
+          <div class="date-badge">Today</div>
+        </div>
+
+        <div class="chat-input-bar-container">
+          <div class="chat-input-bar">
+            <div class="chat-input-field">
+              <input type="text" id="messageInputField" placeholder="Type a message..." autocomplete="off" onkeypress="if(event.key === 'Enter') sendMsg()" />
+            </div>
+            <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
           </div>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: var(--accent-cyan);"></i>
       </div>
+    </div>
 
-      <div class="section-title">
-        <h3>Quick Rooms</h3>
-        <a href="#" onclick="showScreen('screen-join')">Join with Code →</a>
-      </div>
-
-      <div class="room-item" onclick="quickJoinRoom('StudyGroup')">
-        <div class="room-item-left">
-          <div class="room-avatar" style="background: #007aff;">S</div>
-          <div>
-            <div class="room-name">Study Group</div>
-            <div class="room-meta">Code: StudyGroup • 10 Max</div>
-          </div>
+    <!-- 4. MEMBERS SCREEN -->
+    <div class="screen" id="screen-members">
+      <div class="members-container">
+        <div class="nav-back-header">
+          <button class="back-btn" onclick="showScreen('screen-chat')"><i class="fa-solid fa-arrow-left"></i></button>
+          <h3>Room Members</h3>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
-      </div>
-
-      <div class="room-item" onclick="quickJoinRoom('Friends10')">
-        <div class="room-item-left">
-          <div class="room-avatar" style="background: #8b5cf6;">F</div>
-          <div>
-            <div class="room-name">Friends Forever</div>
-            <div class="room-meta">Code: Friends10 • 10 Max</div>
-          </div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
+          Active Users (<span id="memberCountBadge">0</span>/10)
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
-      </div>
-
-      <div class="room-item" onclick="quickJoinRoom('TechGroup')">
-        <div class="room-item-left">
-          <div class="room-avatar" style="background: #10b981;">T</div>
-          <div>
-            <div class="room-name">Tech & Coding</div>
-            <div class="room-meta">Code: TechGroup • 10 Max</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
+        <div class="members-list" id="memberList"></div>
+        <button class="leave-btn" onclick="leaveChat()"><i class="fa-solid fa-right-from-bracket"></i> Leave Room</button>
       </div>
     </div>
 
-    <div class="bottom-nav">
-      <button class="nav-btn active"><i class="fa-solid fa-house"></i>Home</button>
-      <button class="nav-btn-center" onclick="showScreen('screen-join')"><i class="fa-solid fa-plus"></i></button>
-      <button class="nav-btn" onclick="openNameModal(true)"><i class="fa-regular fa-user"></i>Profile</button>
-    </div>
-  </div>
-
-  <!-- 2. JOIN ROOM SCREEN -->
-  <div class="screen" id="screen-join">
-    <div class="web-container">
-      <div class="nav-back-header">
-        <button class="back-btn" onclick="showScreen('screen-home')"><i class="fa-solid fa-arrow-left"></i></button>
-        <h3>Join Room</h3>
-      </div>
-
-      <div class="enter-room-body">
-        <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
-        <h2 style="font-size:22px; font-weight:700; margin-bottom:6px;">Enter Room Code</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ask your friend for the room code.</p>
-
-        <div class="code-input-box">
-          <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 16px;"></i>
-          <input type="text" id="customRoomInput" placeholder="e.g. 82982" />
-        </div>
-
-        <button class="action-btn-primary" onclick="handleJoinSubmit()">Join Room</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. CHAT SCREEN -->
-  <div class="screen" id="screen-chat">
-    <div class="chat-topbar">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="back-btn" onclick="leaveChat()"><i class="fa-solid fa-arrow-left"></i></button>
-        <div class="chat-room-info" onclick="showScreen('screen-members')">
-          <div class="chat-room-avatar" id="chatRoomAvatar">R</div>
-          <div class="chat-title-group">
-            <h4 id="chatRoomHeaderTitle">Room Code</h4>
-            <p><span class="dot-green"></span> <span id="onlineCountText">1/10 Online</span></p>
-          </div>
-        </div>
-      </div>
-      <div class="circle-icon-btn" onclick="showScreen('screen-members')"><i class="fa-solid fa-users"></i></div>
-    </div>
-
-    <!-- चैट संदेश सूची -->
-    <div class="chat-area" id="chatMessages">
-      <div class="date-badge">Today</div>
-    </div>
-
-    <!-- परमानेंट फिक्स्ड इनपुट बार -->
-    <div class="chat-input-bar-container">
-      <div class="chat-input-bar">
-        <div class="chat-input-field">
-          <input type="text" id="messageInputField" placeholder="Type a message..." autocomplete="off" onkeypress="if(event.key === 'Enter') sendMsg()" />
-        </div>
-        <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. MEMBERS SCREEN -->
-  <div class="screen" id="screen-members">
-    <div class="web-container">
-      <div class="nav-back-header">
-        <button class="back-btn" onclick="showScreen('screen-chat')"><i class="fa-solid fa-arrow-left"></i></button>
-        <h3>Room Members</h3>
-      </div>
-      <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
-        Active Users (<span id="memberCountBadge">0</span>/10)
-      </div>
-      <div class="members-list" id="memberList"></div>
-    </div>
-    <div class="leave-room-footer">
-      <button class="leave-btn" onclick="leaveChat()"><i class="fa-solid fa-right-from-bracket"></i> Leave Room</button>
-    </div>
   </div>
 
   <!-- Firebase Scripts -->
@@ -728,7 +752,6 @@
     function showScreen(screenId) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById(screenId).classList.add("active");
-      window.scrollTo(0, 0);
     }
 
     function openNameModal(isEditing = false) {
@@ -840,7 +863,6 @@
       const messagesContainer = document.getElementById("chatMessages");
       messagesContainer.innerHTML = `<div class="date-badge">Today</div>`;
 
-      // पिछले लिसनर हटाकर नया लगाना ताकि डुप्लीकेट न बने
       db.ref(`rooms/${activeRoom}/messages`).off();
       db.ref(`rooms/${activeRoom}/messages`).on("child_added", (snapshot) => {
         const data = snapshot.val();
@@ -861,7 +883,6 @@
         `;
 
         messagesContainer.appendChild(row);
-        // स्मूथ स्क्रोल
         setTimeout(() => {
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }, 50);
@@ -880,6 +901,7 @@
       });
 
       input.value = "";
+      input.focus();
     }
 
     function leaveChat() {
