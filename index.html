@@ -2,10 +2,9 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Group Chat</title>
   
-  <!-- FontAwesome Icons & Modern Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -23,71 +22,76 @@
       --danger: #ef4444;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-    /* Full Window Web Layout */
-    body {
-      background-color: var(--bg-main);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
-      color: var(--text-main);
-      min-height: 100vh;
-      width: 100vw;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
     }
 
-    /* Screen Views */
+    /* मोबाइल में एड्रेस बार से कटने से रोकने के लिए dvh और fixed height */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      width: 100%;
+      overflow: hidden;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
     .screen {
       flex: 1;
       width: 100%;
-      height: 100vh;
+      height: 100%;
+      height: 100dvh;
       display: none;
       flex-direction: column;
       overflow: hidden;
+      position: relative;
     }
     .screen.active { display: flex; }
 
-    /* Centered Container for Home and Join screens */
     .web-container {
       width: 100%;
-      max-width: 650px;
+      max-width: 600px;
       margin: 0 auto;
       height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 20px 20px 0;
+      padding: 16px 18px 0;
     }
 
-    /* =========================================
-       SCREEN 1: HOME SCREEN
-       ========================================= */
+    /* HOME SCREEN */
     .home-header {
-      padding: 10px 0 20px;
+      padding: 10px 0 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .logo-area { display: flex; align-items: center; gap: 14px; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
     .app-icon {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       background: linear-gradient(135deg, #007aff, #00c6ff);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4);
+      font-size: 20px;
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
     }
-    .title-area h2 { font-size: 22px; font-weight: 700; }
-    .title-area p { font-size: 13px; color: var(--text-muted); }
+    .title-area h2 { font-size: 20px; font-weight: 700; }
+    .title-area p { font-size: 12px; color: var(--text-muted); }
 
     .circle-icon-btn {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 50%;
@@ -97,9 +101,7 @@
       color: var(--text-main);
       cursor: pointer;
       font-size: 16px;
-      transition: all 0.2s;
     }
-    .circle-icon-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
 
     .home-content {
       flex: 1;
@@ -107,18 +109,17 @@
       padding-bottom: 90px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* Status Pills */
-    .status-row { display: flex; gap: 12px; }
+    .status-row { display: flex; gap: 10px; }
     .pill {
       flex: 1;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 14px;
-      font-size: 13px;
+      font-size: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -127,87 +128,79 @@
     .pill b { color: #fff; font-weight: 600; }
     .dot-green { width: 8px; height: 8px; border-radius: 50%; background: var(--online-green); box-shadow: 0 0 8px var(--online-green); }
 
-    /* Action Banner */
     .join-banner {
       background: linear-gradient(135deg, #0d1a38, #112652);
       border: 1px solid rgba(0, 122, 255, 0.3);
-      padding: 20px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s;
-    }
-    .join-banner:hover { transform: translateY(-2px); border-color: var(--accent-cyan); }
-    .join-banner-left { display: flex; align-items: center; gap: 16px; }
-    .hash-box {
-      width: 48px;
-      height: 48px;
-      background: var(--accent-blue);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #fff;
-    }
-    .join-banner-text h4 { font-size: 16px; font-weight: 700; }
-    .join-banner-text p { font-size: 13px; color: var(--text-muted); }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
-    }
-    .section-title h3 { font-size: 16px; font-weight: 700; }
-    .section-title a { font-size: 13px; color: var(--accent-cyan); text-decoration: none; }
-
-    /* Room Items */
-    .room-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
       padding: 16px 18px;
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .room-item:hover { transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.4); background: #111b33; }
-    .room-item-left { display: flex; align-items: center; gap: 14px; }
+    .join-banner-left { display: flex; align-items: center; gap: 14px; }
+    .hash-box {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-blue);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+    }
+    .join-banner-text h4 { font-size: 15px; font-weight: 700; }
+    .join-banner-text p { font-size: 12px; color: var(--text-muted); }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .section-title h3 { font-size: 15px; font-weight: 700; }
+    .section-title a { font-size: 12px; color: var(--accent-cyan); text-decoration: none; }
+
+    .room-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 14px 16px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .room-item-left { display: flex; align-items: center; gap: 12px; }
     .room-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 18px;
+      font-size: 16px;
       color: #fff;
     }
-    .room-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-    .room-meta { font-size: 12px; color: var(--text-muted); }
+    .room-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .room-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* Full-width Floating Bottom Nav */
     .bottom-nav {
-      position: fixed;
+      position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 70px;
-      background: rgba(13, 21, 39, 0.95);
-      backdrop-filter: blur(12px);
+      height: 64px;
+      background: rgba(13, 21, 39, 0.98);
+      backdrop-filter: blur(10px);
       border-top: 1px solid var(--border-color);
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
-      gap: 70px;
-      z-index: 100;
+      z-index: 10;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
     .nav-btn {
       background: none;
@@ -217,34 +210,29 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
     }
     .nav-btn.active { color: var(--accent-cyan); }
-    .nav-btn i { font-size: 18px; }
     .nav-btn-center {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       background: linear-gradient(135deg, #007aff, #00c6ff);
       border-radius: 50%;
       border: none;
       color: #fff;
-      font-size: 22px;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: -24px;
-      box-shadow: 0 10px 25px rgba(0, 122, 255, 0.5);
+      margin-top: -20px;
+      box-shadow: 0 8px 20px rgba(0, 122, 255, 0.45);
       cursor: pointer;
-      transition: transform 0.2s;
     }
-    .nav-btn-center:hover { transform: scale(1.08); }
 
-    /* =========================================
-       SCREEN 2: ENTER ROOM CODE SCREEN
-       ========================================= */
+    /* JOIN ROOM SCREEN */
     .nav-back-header {
-      padding: 16px 0;
+      padding: 14px 0;
       display: flex;
       align-items: center;
     }
@@ -252,157 +240,149 @@
       background: none;
       border: none;
       color: #fff;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
       padding: 6px;
     }
     .nav-back-header h3 {
       flex: 1;
       text-align: center;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       margin-right: 28px;
     }
 
     .enter-room-body {
       flex: 1;
-      padding: 20px 0 100px;
+      padding: 20px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
     }
-
     .bubble-hero {
-      width: 110px;
-      height: 110px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: radial-gradient(circle, #007aff, #08214d);
-      box-shadow: 0 0 35px rgba(0, 122, 255, 0.4);
+      box-shadow: 0 0 30px rgba(0, 122, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 46px;
+      font-size: 38px;
       color: #fff;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-
-    .enter-room-body h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
-    .enter-room-body p { font-size: 14px; color: var(--text-muted); margin-bottom: 26px; max-width: 320px; }
-
     .code-input-box {
       width: 100%;
-      max-width: 360px;
+      max-width: 320px;
       background: var(--card-inner);
       border: 1.5px solid rgba(0, 122, 255, 0.4);
-      padding: 16px 20px;
-      border-radius: 16px;
+      padding: 14px 18px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .code-input-box input {
       background: transparent;
       border: none;
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       width: 100%;
       outline: none;
       text-transform: uppercase;
     }
-    .code-input-box input::placeholder { color: #5a6e91; text-transform: none; }
-
     .action-btn-primary {
       width: 100%;
-      max-width: 360px;
-      padding: 16px;
+      max-width: 320px;
+      padding: 14px;
       background: linear-gradient(135deg, #007aff, #00b4d8);
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0, 122, 255, 0.35);
-      transition: opacity 0.2s;
     }
-    .action-btn-primary:hover { opacity: 0.95; }
 
     /* =========================================
-       SCREEN 3: CHAT SCREEN (Full Browser)
+       CHAT SCREEN FIX (NO CUTOFF ON MOBILE)
        ========================================= */
+    #screen-chat {
+      display: none;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
     .chat-topbar {
-      padding: 16px 24px;
-      background: rgba(13, 21, 39, 0.95);
+      flex-shrink: 0;
+      padding: 12px 16px;
+      background: rgba(13, 21, 39, 0.98);
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      z-index: 5;
     }
-    .chat-room-info { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .chat-room-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .chat-room-avatar {
-      width: 44px;
-      height: 44px;
+      width: 38px;
+      height: 38px;
       background: #007aff;
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       color: #fff;
-      font-size: 18px;
     }
-    .chat-title-group h4 { font-size: 16px; font-weight: 700; }
-    .chat-title-group p { font-size: 12px; color: var(--accent-cyan); display: flex; align-items: center; gap: 6px; }
+    .chat-title-group h4 { font-size: 15px; font-weight: 700; }
+    .chat-title-group p { font-size: 11px; color: var(--accent-cyan); display: flex; align-items: center; gap: 5px; }
 
+    /* मैसेज एरिया ऑटो-स्क्रोल और फ्लेक्स-1 */
     .chat-area {
       flex: 1;
-      padding: 24px;
+      padding: 16px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
+      gap: 12px;
     }
 
     .date-badge {
       align-self: center;
       background: var(--card-inner);
-      padding: 5px 16px;
+      padding: 4px 12px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       border: 1px solid var(--border-color);
     }
 
-    /* Messages */
     .chat-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: flex-end;
-      max-width: 70%;
+      max-width: 82%;
     }
     .chat-row.mine { align-self: flex-end; flex-direction: row-reverse; }
     .chat-row.other { align-self: flex-start; }
 
     .msg-user-avatar {
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background: #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
       color: #38bdf8;
       border: 1px solid rgba(255,255,255,0.1);
@@ -410,8 +390,8 @@
     }
 
     .msg-bubble {
-      padding: 12px 16px;
-      border-radius: 18px;
+      padding: 10px 14px;
+      border-radius: 16px;
     }
     .chat-row.other .msg-bubble {
       background: var(--card-bg);
@@ -423,50 +403,38 @@
       background: linear-gradient(135deg, #007aff, #0062cc);
       border-bottom-right-radius: 4px;
       color: #fff;
-      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.25);
     }
 
-    .msg-sender {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      margin-bottom: 4px;
-    }
-    .msg-text { font-size: 15px; line-height: 1.45; word-break: break-word; }
-    .msg-time {
-      font-size: 11px;
-      opacity: 0.7;
-      text-align: right;
-      margin-top: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 4px;
-    }
+    .msg-sender { font-size: 10px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px; }
+    .msg-text { font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .msg-time { font-size: 10px; opacity: 0.7; text-align: right; margin-top: 3px; }
 
-    /* Input Bar */
+    /* नीचे का चैट इनपुट बार - कभी नहीं छुपेगा */
     .chat-input-bar-container {
+      flex-shrink: 0;
       width: 100%;
-      background: var(--card-bg);
+      background: #090e1c;
       border-top: 1px solid var(--border-color);
-      padding: 14px 20px;
+      padding: 10px 14px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      z-index: 10;
     }
     .chat-input-bar {
-      max-width: 900px;
-      margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
     }
     .chat-input-field {
       flex: 1;
       background: var(--card-inner);
       border: 1px solid var(--border-color);
-      border-radius: 26px;
-      padding: 12px 20px;
+      border-radius: 24px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .chat-input-field input {
       background: transparent;
@@ -476,51 +444,43 @@
       font-size: 15px;
       width: 100%;
     }
-    .chat-input-field input::placeholder { color: var(--text-muted); }
     .chat-send-btn {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       background: var(--accent-blue);
       border: none;
       border-radius: 50%;
       color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(0, 122, 255, 0.4);
-      transition: transform 0.15s;
+      flex-shrink: 0;
     }
-    .chat-send-btn:hover { transform: scale(1.05); }
 
-    /* =========================================
-       SCREEN 4: MEMBERS SCREEN
-       ========================================= */
+    /* MEMBERS SCREEN */
     .members-list {
       flex: 1;
-      padding: 20px 0;
+      padding: 16px 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      max-width: 600px;
-      width: 100%;
-      margin: 0 auto;
+      gap: 10px;
     }
     .member-item {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 14px 18px;
-      border-radius: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .member-item-left { display: flex; align-items: center; gap: 14px; }
+    .member-item-left { display: flex; align-items: center; gap: 12px; }
     .member-avatar {
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #1e293b;
       display: flex;
@@ -529,44 +489,32 @@
       font-weight: 700;
       color: var(--accent-cyan);
     }
-    .member-role {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-    }
-    .member-role.admin { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-
     .leave-room-footer {
-      padding: 18px 0 30px;
-      max-width: 600px;
-      width: 100%;
-      margin: 0 auto;
+      padding: 14px 20px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
     }
     .leave-btn {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.3);
       color: var(--danger);
-      border-radius: 16px;
+      border-radius: 14px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      transition: all 0.2s;
+      gap: 8px;
     }
-    .leave-btn:hover { background: #ef4444; color: #fff; }
   </style>
 </head>
 <body>
 
-  <!-- ==================== 1. HOME SCREEN ==================== -->
+  <!-- 1. HOME SCREEN -->
   <div class="screen active" id="screen-home">
     <div class="web-container">
       <div class="home-header">
@@ -577,7 +525,7 @@
             <p>Connect • Share • Together</p>
           </div>
         </div>
-        <div class="circle-icon-btn" onclick="changeNamePrompt()" title="Profile / Name">
+        <div class="circle-icon-btn" onclick="changeNamePrompt()">
           <i class="fa-regular fa-user"></i>
         </div>
       </div>
@@ -612,7 +560,7 @@
               <div class="room-meta">Code: StudyGroup • 10 Max</div>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 14px;"></i>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
         <div class="room-item" onclick="quickJoinRoom('Friends10')">
@@ -623,7 +571,7 @@
               <div class="room-meta">Code: Friends10 • 10 Max</div>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 14px;"></i>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
         <div class="room-item" onclick="quickJoinRoom('TechGroup')">
@@ -634,22 +582,19 @@
               <div class="room-meta">Code: TechGroup • 10 Max</div>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 14px;"></i>
+          <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
       </div>
     </div>
 
-    <!-- Floating Full-Width Bottom Bar -->
     <div class="bottom-nav">
       <button class="nav-btn active"><i class="fa-solid fa-house"></i>Home</button>
-      <button class="nav-btn-center" onclick="showScreen('screen-join')" title="Join with Code">
-        <i class="fa-solid fa-plus"></i>
-      </button>
+      <button class="nav-btn-center" onclick="showScreen('screen-join')"><i class="fa-solid fa-plus"></i></button>
       <button class="nav-btn" onclick="changeNamePrompt()"><i class="fa-regular fa-user"></i>Profile</button>
     </div>
   </div>
 
-  <!-- ==================== 2. JOIN ROOM SCREEN ==================== -->
+  <!-- 2. JOIN ROOM SCREEN -->
   <div class="screen" id="screen-join">
     <div class="web-container">
       <div class="nav-back-header">
@@ -659,47 +604,44 @@
 
       <div class="enter-room-body">
         <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
-        <h2>Enter Room Code</h2>
-        <p>Ask your friend for the room code and join the group chat.</p>
+        <h2 style="font-size:22px; font-weight:700; margin-bottom:6px;">Enter Room Code</h2>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ask your friend for the room code.</p>
 
         <div class="code-input-box">
-          <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 18px;"></i>
-          <input type="text" id="customRoomInput" placeholder="e.g. 7F3K9Q" />
+          <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 16px;"></i>
+          <input type="text" id="customRoomInput" placeholder="e.g. 82982" />
         </div>
 
-        <button class="action-btn-primary" onclick="handleJoinSubmit()">
-          Join Room <i class="fa-solid fa-chevron-right"></i>
-        </button>
+        <button class="action-btn-primary" onclick="handleJoinSubmit()">Join Room</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== 3. CHAT SCREEN ==================== -->
+  <!-- 3. CHAT SCREEN (MOBILE FIXED) -->
   <div class="screen" id="screen-chat">
     <div class="chat-topbar">
-      <div style="display: flex; align-items: center; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
         <button class="back-btn" onclick="leaveChat()"><i class="fa-solid fa-arrow-left"></i></button>
         <div class="chat-room-info" onclick="showScreen('screen-members')">
-          <div class="chat-room-avatar" id="chatRoomAvatar">S</div>
+          <div class="chat-room-avatar" id="chatRoomAvatar">R</div>
           <div class="chat-title-group">
-            <h4 id="chatRoomHeaderTitle">Study Group</h4>
-            <p><span class="dot-green"></span> <span id="onlineCountText">0/10 Online</span></p>
+            <h4 id="chatRoomHeaderTitle">Room Code</h4>
+            <p><span class="dot-green"></span> <span id="onlineCountText">1/10 Online</span></p>
           </div>
         </div>
       </div>
-      <div class="circle-icon-btn" onclick="showScreen('screen-members')" title="Members List">
-        <i class="fa-solid fa-users"></i>
-      </div>
+      <div class="circle-icon-btn" onclick="showScreen('screen-members')"><i class="fa-solid fa-users"></i></div>
     </div>
 
+    <!-- स्क्रोल होने वाला मैसेज एरिया -->
     <div class="chat-area" id="chatMessages">
       <div class="date-badge">Today</div>
     </div>
 
+    <!-- हमेशा नीचे दिखने वाला इनपुट बार -->
     <div class="chat-input-bar-container">
       <div class="chat-input-bar">
         <div class="chat-input-field">
-          <i class="fa-regular fa-face-smile" style="color: var(--text-muted);"></i>
           <input type="text" id="messageInputField" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMsg()" />
         </div>
         <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -707,32 +649,24 @@
     </div>
   </div>
 
-  <!-- ==================== 4. ROOM MEMBERS SCREEN ==================== -->
+  <!-- 4. MEMBERS SCREEN -->
   <div class="screen" id="screen-members">
     <div class="web-container">
       <div class="nav-back-header">
         <button class="back-btn" onclick="showScreen('screen-chat')"><i class="fa-solid fa-arrow-left"></i></button>
         <h3>Room Members</h3>
       </div>
-
-      <div style="padding: 10px 0; max-width: 600px; width: 100%; margin: 0 auto;">
-        <div style="font-size: 14px; color: var(--text-muted); display: flex; justify-content: space-between;">
-          <span>Active Users (<span id="memberCountBadge">0</span>/10)</span>
-          <span style="color: var(--online-green);">● All Online</span>
-        </div>
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
+        Active Users (<span id="memberCountBadge">0</span>/10)
       </div>
-
       <div class="members-list" id="memberList"></div>
-
-      <div class="leave-room-footer">
-        <button class="leave-btn" onclick="leaveChat()">
-          <i class="fa-solid fa-right-from-bracket"></i> Leave Room
-        </button>
-      </div>
+    </div>
+    <div class="leave-room-footer">
+      <button class="leave-btn" onclick="leaveChat()"><i class="fa-solid fa-right-from-bracket"></i> Leave Room</button>
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -774,7 +708,7 @@
       if (newName && newName.trim() !== "") {
         currentUser = newName.trim();
         localStorage.setItem("chat_username", currentUser);
-        alert("नाम अपडेट हो गया: " + currentUser);
+        alert("नाम बदल दिया गया: " + currentUser);
       }
     }
 
@@ -839,11 +773,11 @@
             <div class="member-item-left">
               <div class="member-avatar">${user.name.charAt(0).toUpperCase()}</div>
               <div>
-                <div style="font-size: 15px; font-weight:600;">${user.name} ${isMe ? "(You)" : ""}</div>
-                <div style="font-size: 12px; color: var(--online-green);">● Online</div>
+                <div style="font-size: 14px; font-weight:600;">${user.name} ${isMe ? "(You)" : ""}</div>
+                <div style="font-size: 11px; color: var(--online-green);">● Online</div>
               </div>
             </div>
-            <span class="member-role ${index === 0 ? 'admin' : ''}">${index === 0 ? 'Admin' : 'Member'}</span>
+            <span style="font-size:11px; color:var(--text-muted);">${index === 0 ? 'Admin' : 'Member'}</span>
           `;
           memberList.appendChild(div);
           index++;
@@ -869,7 +803,7 @@
           <div class="msg-bubble">
             ${!isMine ? `<div class="msg-sender">${data.sender}</div>` : ''}
             <div class="msg-text">${data.text}</div>
-            <div class="msg-time">${timeStr} ${isMine ? '<i class="fa-solid fa-check-double" style="font-size:10px; color:#93c5fd;"></i>' : ''}</div>
+            <div class="msg-time">${timeStr}</div>
           </div>
         `;
 
@@ -890,6 +824,7 @@
       });
 
       input.value = "";
+      input.focus();
     }
 
     function leaveChat() {
