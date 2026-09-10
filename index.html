@@ -3,63 +3,404 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Group Chat</title>
+  <title>DecaChat - Group Room</title>
+  
+  <!-- FontAwesome Icons CDN (कोई आइकन डाउनलोड करने की जरूरत नहीं) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: #0f172a; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
 
-    /* Home Card */
-    .card { background: #1e293b; padding: 30px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); text-align: center; width: 90%; max-width: 400px; }
-    .card h1 { margin-bottom: 20px; font-size: 26px; color: #38bdf8; }
-    .icon-btn { font-size: 50px; background: #334155; border: none; border-radius: 50%; width: 90px; height: 90px; cursor: pointer; transition: transform 0.2s, background 0.2s; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-    .icon-btn:hover { transform: scale(1.08); background: #38bdf8; }
-    .input-box { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 16px; outline: none; }
-    .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #38bdf8; color: #0f172a; font-size: 16px; font-weight: bold; cursor: pointer; }
-    .btn:hover { background: #0ea5e9; }
+    /* Animated Gradient Background */
+    body {
+      background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                  radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                  #0b0f19;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
 
-    /* Chat Container */
-    #chat-screen { display: none; width: 95%; max-width: 800px; height: 85vh; background: #1e293b; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
-    .chat-header { background: #334155; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #475569; }
-    .chat-main { display: flex; flex: 1; overflow: hidden; }
-    .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0f172a; }
-    .sidebar { width: 180px; background: #1e293b; border-left: 1px solid #475569; padding: 15px; overflow-y: auto; }
-    .sidebar h4 { font-size: 14px; margin-bottom: 10px; color: #94a3b8; }
+    /* Glassmorphism Home Card */
+    .card {
+      background: rgba(23, 32, 54, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 40px 32px;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 30px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .card h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 24px;
+    }
+
+    /* Pulsing Glowing Icon Button */
+    .icon-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .icon-glow-ring {
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #0ea5e9, #6366f1);
+      filter: blur(12px);
+      opacity: 0.6;
+      animation: pulse 3s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.85; }
+    }
+
+    .icon-btn {
+      position: relative;
+      z-index: 1;
+      width: 96px;
+      height: 96px;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2px solid rgba(56, 189, 248, 0.3);
+      border-radius: 50%;
+      color: #38bdf8;
+      font-size: 38px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.08) translateY(-3px);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 15px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Input Field Styling */
+    .input-wrap {
+      position: relative;
+      margin: 18px 0 12px;
+    }
+
+    .input-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 16px;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 13px 14px 13px 44px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0b1120;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-box:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.45);
+    }
+
+    /* Chat Room Screen */
+    #chat-screen {
+      display: none;
+      width: 95%;
+      max-width: 950px;
+      height: 88vh;
+      background: rgba(23, 32, 54, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background: rgba(15, 23, 42, 0.7);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .header-info h3 {
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-info span {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .exit-btn {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .exit-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .chat-main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(11, 17, 32, 0.5);
+    }
+
+    /* Sidebar Members */
+    .sidebar {
+      width: 220px;
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 18px;
+      overflow-y: auto;
+    }
+
+    .sidebar h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .sidebar ul { list-style: none; }
-    .sidebar li { font-size: 14px; padding: 6px 0; border-bottom: 1px solid #334155; color: #38bdf8; }
-    
-    /* Message Bubble */
-    .msg { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; line-height: 1.4; word-break: break-word; }
-    .msg.other { background: #334155; align-self: flex-start; }
-    .msg.mine { background: #0284c7; align-self: flex-end; }
-    .msg .sender-name { font-size: 11px; color: #cbd5e1; font-weight: bold; margin-bottom: 2px; }
 
-    .chat-footer { padding: 10px 15px; background: #1e293b; display: flex; gap: 10px; border-top: 1px solid #475569; }
-    .chat-footer input { flex: 1; padding: 10px 15px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; outline: none; }
-    .chat-footer button { padding: 10px 20px; background: #38bdf8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .sidebar li {
+      font-size: 14px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Chat Bubbles */
+    .msg {
+      max-width: 65%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .msg.other {
+      background: #1e293b;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .msg.mine {
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      color: #fff;
+    }
+
+    .msg .sender-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #93c5fd;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chat-footer {
+      padding: 16px 20px;
+      background: rgba(15, 23, 42, 0.7);
+      display: flex;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chat-footer input {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0b1120;
+      color: #fff;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .chat-footer input:focus {
+      border-color: #38bdf8;
+    }
+
+    .chat-footer button {
+      padding: 12px 22px;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    }
   </style>
 </head>
 <body>
 
   <!-- Home / Join Room Screen -->
   <div class="card" id="home-screen">
+    <div class="badge">
+      <i class="fa-solid fa-users"></i> Max 10 Members
+    </div>
     <h1>Group Chat</h1>
-    <button class="icon-btn" onclick="openRoomInput()" title="Join Chat">💬</button>
-    <p style="color: #94a3b8; font-size: 14px;">आइकन पर क्लिक करके ग्रुप रूम कोड डालें</p>
+    
+    <div class="icon-container">
+      <div class="icon-glow-ring"></div>
+      <button class="icon-btn" onclick="openRoomInput()" title="Join Group Room">
+        <i class="fa-solid fa-comments"></i>
+      </button>
+    </div>
 
-    <div id="room-input-box" style="display: none; margin-top: 15px;">
-      <input type="text" id="roomCodeInput" class="input-box" placeholder="कोई भी रूम कोड डालें (उदा: 5566)" />
-      <button class="btn" onclick="joinRoom()">Join Group</button>
+    <p class="subtitle">आइकन पर क्लिक करें और रूम कोड डालकर चैट शुरू करें</p>
+
+    <div id="room-input-box" style="display: none; margin-top: 10px;">
+      <div class="input-wrap">
+        <i class="fa-solid fa-key"></i>
+        <input type="text" id="roomCodeInput" class="input-box" placeholder="रूम कोड दर्ज करें (उदा: 7788)" />
+      </div>
+      <button class="btn" onclick="joinRoom()">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Join Room
+      </button>
     </div>
   </div>
 
   <!-- Chat Screen -->
-  <div id="chat-screen" style="display: none;">
+  <div id="chat-screen">
     <div class="chat-header">
-      <div>
-        <h3 id="displayRoomCode">Room: ----</h3>
-        <span style="font-size: 12px; color: #94a3b8;">अधिकतम 10 लोग</span>
+      <div class="header-info">
+        <h3 id="displayRoomCode"><i class="fa-solid fa-hashtag" style="color: #38bdf8;"></i> Room: ----</h3>
+        <span><i class="fa-solid fa-shield-halved"></i> प्राइवेट 10-पर्सन एंड-टू-एंड चैनल</span>
       </div>
-      <button onclick="leaveRoom()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Exit</button>
+      <button class="exit-btn" onclick="leaveRoom()">
+        <i class="fa-solid fa-right-from-bracket"></i> Exit
+      </button>
     </div>
     
     <div class="chat-main">
@@ -67,23 +408,26 @@
       
       <!-- Side Bar: कितने लोग Join हैं -->
       <div class="sidebar">
-        <h4>Joined (<span id="userCount">0</span>/10)</h4>
+        <h4><i class="fa-solid fa-user-group"></i> Active (<span id="userCount">0</span>/10)</h4>
         <ul id="userList"></ul>
       </div>
     </div>
 
     <div class="chat-footer">
-      <input type="text" id="msgInput" placeholder="मैसेज टाइप करें..." onkeypress="handleKeyPress(event)" />
-      <button onclick="sendMessage()">Send</button>
+      <input type="text" id="msgInput" placeholder="अपना मैसेज लिखें..." onkeypress="handleKeyPress(event)" />
+      <button onclick="sendMessage()">
+        <span>Send</span>
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // --- 1. अपनी Firebase डिटेल्स यहाँ डालें ---
+    // आपकी Firebase कॉन्फ़िगरेशन
     const firebaseConfig = {
       apiKey: "AIzaSyBtGn2nJxkSYmRWXZPx84rYuznDko7NtGE",
       authDomain: "decachat-804fb.firebaseapp.com",
@@ -101,48 +445,46 @@
     let userRef = null;
 
     function openRoomInput() {
-      // नाम पहले से सेव नहीं है तो ही पूछेगा
       if (!userName) {
-        userName = prompt("कृपया अपना नाम डालें:");
+        userName = prompt("कृपया अपना नाम दर्ज करें:");
         if (!userName || userName.trim() === "") {
-          alert("नाम डालना जरूरी है!");
+          alert("नाम दर्ज करना जरूरी है!");
           userName = "";
           return;
         }
         localStorage.setItem("chat_username", userName.trim());
       }
       document.getElementById("room-input-box").style.display = "block";
+      document.getElementById("roomCodeInput").focus();
     }
 
     function joinRoom() {
       const room = document.getElementById("roomCodeInput").value.trim();
       if (!room) {
-        alert("कृपया एक रूम कोड डालें!");
+        alert("कृपया एक रूम कोड दर्ज करें!");
         return;
       }
       currentRoom = room;
 
       const roomUsersRef = db.ref(`rooms/${currentRoom}/users`);
 
-      // 10 यूजर की लिमिट चेक करना
+      // 10 यूजर की लिमिट चेक
       roomUsersRef.once("value", (snapshot) => {
         const users = snapshot.val() || {};
         const count = Object.keys(users).length;
 
         if (count >= 10) {
-          alert("इस रूम में पहले से 10 लोग मौजूद हैं! नया कोड बनाएं।");
+          alert("माफ़ करें! इस रूम में पहले से 10 लोग पूरे हो चुके हैं।");
           return;
         }
 
-        // रूम में यूजर जोड़ना
         userRef = roomUsersRef.push();
         userRef.set({ name: userName });
-        userRef.onDisconnect().remove(); // टैब बंद होने पर यूजर हट जाएगा
+        userRef.onDisconnect().remove();
 
-        // स्क्रीन बदलना
         document.getElementById("home-screen").style.display = "none";
         document.getElementById("chat-screen").style.display = "flex";
-        document.getElementById("displayRoomCode").innerText = "Room Code: " + currentRoom;
+        document.getElementById("displayRoomCode").innerHTML = `<i class="fa-solid fa-hashtag" style="color: #38bdf8;"></i> Room: ${currentRoom}`;
 
         listenMessages();
         listenUsers();
@@ -160,7 +502,7 @@
 
         for (let key in users) {
           const li = document.createElement("li");
-          li.innerText = users[key].name;
+          li.innerHTML = `<span class="online-dot"></span> <i class="fa-regular fa-user" style="font-size:12px; color:#94a3b8;"></i> ${users[key].name}`;
           userList.appendChild(li);
         }
       });
@@ -177,7 +519,9 @@
         msgDiv.classList.add(data.sender === userName ? "mine" : "other");
 
         msgDiv.innerHTML = `
-          <div class="sender-name">${data.sender}</div>
+          <div class="sender-name">
+            <i class="fa-regular fa-circle-user"></i> ${data.sender}
+          </div>
           <div>${data.text}</div>
         `;
         messagesList.appendChild(msgDiv);
