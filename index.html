@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Chat</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #0f172a; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+    /* Home Card */
+    .card { background: #1e293b; padding: 30px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); text-align: center; width: 90%; max-width: 400px; }
+    .card h1 { margin-bottom: 20px; font-size: 26px; color: #38bdf8; }
+    .icon-btn { font-size: 50px; background: #334155; border: none; border-radius: 50%; width: 90px; height: 90px; cursor: pointer; transition: transform 0.2s, background 0.2s; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+    .icon-btn:hover { transform: scale(1.08); background: #38bdf8; }
+    .input-box { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 16px; outline: none; }
+    .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #38bdf8; color: #0f172a; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .btn:hover { background: #0ea5e9; }
+
+    /* Chat Container */
+    #chat-screen { display: none; width: 95%; max-width: 800px; height: 85vh; background: #1e293b; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+    .chat-header { background: #334155; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #475569; }
+    .chat-main { display: flex; flex: 1; overflow: hidden; }
+    .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0f172a; }
+    .sidebar { width: 180px; background: #1e293b; border-left: 1px solid #475569; padding: 15px; overflow-y: auto; }
+    .sidebar h4 { font-size: 14px; margin-bottom: 10px; color: #94a3b8; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { font-size: 14px; padding: 6px 0; border-bottom: 1px solid #334155; color: #38bdf8; }
+    
+    /* Message Bubble */
+    .msg { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .msg.other { background: #334155; align-self: flex-start; }
+    .msg.mine { background: #0284c7; align-self: flex-end; }
+    .msg .sender-name { font-size: 11px; color: #cbd5e1; font-weight: bold; margin-bottom: 2px; }
+
+    .chat-footer { padding: 10px 15px; background: #1e293b; display: flex; gap: 10px; border-top: 1px solid #475569; }
+    .chat-footer input { flex: 1; padding: 10px 15px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; outline: none; }
+    .chat-footer button { padding: 10px 20px; background: #38bdf8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- Home / Join Room Screen -->
+  <div class="card" id="home-screen">
+    <h1>Group Chat</h1>
+    <button class="icon-btn" onclick="openRoomInput()" title="Join Chat">💬</button>
+    <p style="color: #94a3b8; font-size: 14px;">आइकन पर क्लिक करके ग्रुप रूम कोड डालें</p>
+
+    <div id="room-input-box" style="display: none; margin-top: 15px;">
+      <input type="text" id="roomCodeInput" class="input-box" placeholder="कोई भी रूम कोड डालें (उदा: 5566)" />
+      <button class="btn" onclick="joinRoom()">Join Group</button>
+    </div>
+  </div>
+
+  <!-- Chat Screen -->
+  <div id="chat-screen" style="display: none;">
+    <div class="chat-header">
+      <div>
+        <h3 id="displayRoomCode">Room: ----</h3>
+        <span style="font-size: 12px; color: #94a3b8;">अधिकतम 10 लोग</span>
+      </div>
+      <button onclick="leaveRoom()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Exit</button>
+    </div>
+    
+    <div class="chat-main">
+      <div class="chat-messages" id="messagesList"></div>
+      
+      <!-- Side Bar: कितने लोग Join हैं -->
+      <div class="sidebar">
+        <h4>Joined (<span id="userCount">0</span>/10)</h4>
+        <ul id="userList"></ul>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <input type="text" id="msgInput" placeholder="मैसेज टाइप करें..." onkeypress="handleKeyPress(event)" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // --- 1. अपनी Firebase डिटेल्स यहाँ डालें ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtGn2nJxkSYmRWXZPx84rYuznDko7NtGE",
+      authDomain: "decachat-804fb.firebaseapp.com",
+      projectId: "decachat-804fb",
+      storageBucket: "decachat-804fb.firebasestorage.app",
+      messagingSenderId: "261229134887",
+      appId: "1:261229134887:web:49d0c6d4f3a04e1dcbfa02",
+      measurementId: "G-61JW1LQ6G5"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let userName = localStorage.getItem("chat_username") || "";
+    let currentRoom = "";
+    let userRef = null;
+
+    function openRoomInput() {
+      // नाम पहले से सेव नहीं है तो ही पूछेगा
+      if (!userName) {
+        userName = prompt("कृपया अपना नाम डालें:");
+        if (!userName || userName.trim() === "") {
+          alert("नाम डालना जरूरी है!");
+          userName = "";
+          return;
+        }
+        localStorage.setItem("chat_username", userName.trim());
+      }
+      document.getElementById("room-input-box").style.display = "block";
+    }
+
+    function joinRoom() {
+      const room = document.getElementById("roomCodeInput").value.trim();
+      if (!room) {
+        alert("कृपया एक रूम कोड डालें!");
+        return;
+      }
+      currentRoom = room;
+
+      const roomUsersRef = db.ref(`rooms/${currentRoom}/users`);
+
+      // 10 यूजर की लिमिट चेक करना
+      roomUsersRef.once("value", (snapshot) => {
+        const users = snapshot.val() || {};
+        const count = Object.keys(users).length;
+
+        if (count >= 10) {
+          alert("इस रूम में पहले से 10 लोग मौजूद हैं! नया कोड बनाएं।");
+          return;
+        }
+
+        // रूम में यूजर जोड़ना
+        userRef = roomUsersRef.push();
+        userRef.set({ name: userName });
+        userRef.onDisconnect().remove(); // टैब बंद होने पर यूजर हट जाएगा
+
+        // स्क्रीन बदलना
+        document.getElementById("home-screen").style.display = "none";
+        document.getElementById("chat-screen").style.display = "flex";
+        document.getElementById("displayRoomCode").innerText = "Room Code: " + currentRoom;
+
+        listenMessages();
+        listenUsers();
+      });
+    }
+
+    function listenUsers() {
+      db.ref(`rooms/${currentRoom}/users`).on("value", (snapshot) => {
+        const users = snapshot.val() || {};
+        const userList = document.getElementById("userList");
+        userList.innerHTML = "";
+        
+        const count = Object.keys(users).length;
+        document.getElementById("userCount").innerText = count;
+
+        for (let key in users) {
+          const li = document.createElement("li");
+          li.innerText = users[key].name;
+          userList.appendChild(li);
+        }
+      });
+    }
+
+    function listenMessages() {
+      const messagesList = document.getElementById("messagesList");
+      messagesList.innerHTML = "";
+
+      db.ref(`rooms/${currentRoom}/messages`).on("child_added", (snapshot) => {
+        const data = snapshot.val();
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("msg");
+        msgDiv.classList.add(data.sender === userName ? "mine" : "other");
+
+        msgDiv.innerHTML = `
+          <div class="sender-name">${data.sender}</div>
+          <div>${data.text}</div>
+        `;
+        messagesList.appendChild(msgDiv);
+        messagesList.scrollTop = messagesList.scrollHeight;
+      });
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("msgInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      db.ref(`rooms/${currentRoom}/messages`).push({
+        sender: userName,
+        text: text,
+        time: Date.now()
+      });
+
+      input.value = "";
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === "Enter") sendMessage();
+    }
+
+    function leaveRoom() {
+      if (userRef) userRef.remove();
+      location.reload();
+    }
+  </script>
+</body>
+</html>
