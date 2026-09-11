@@ -9,11 +9,11 @@
 
   <!-- SEO Meta Tags -->
   <title>DecaChat - Private 10 Person Group Chat</title>
-  <meta name="description" content="DecaChat is a fast, secure and private 10-person group chat room. Share messages, images and emojis.">
+  <meta name="description" content="DecaChat is a fast, PIN-protected and private 10-person group chat room. End-to-end PIN access with anti-screenshot privacy.">
   <meta name="keywords" content="DecaChat, Deca Chat, private group chat, room code chat, free chat app">
   <meta name="robots" content="index, follow">
 
-  <!-- Icons & Fonts -->
+  <!-- FontAwesome Icons & Modern Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -37,6 +37,13 @@
       padding: 0; 
       font-family: 'Plus Jakarta Sans', sans-serif; 
       -webkit-tap-highlight-color: transparent; 
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    input, textarea {
+      -webkit-user-select: auto;
+      user-select: auto;
     }
 
     html, body {
@@ -84,9 +91,28 @@
     }
     .screen.active { display: flex; }
 
-    /* HOME SCREEN */
+    /* Privacy Blur */
+    .privacy-blurred {
+      filter: blur(25px) brightness(0.2) !important;
+      pointer-events: none !important;
+    }
+
+    .privacy-alert-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(6, 11, 23, 0.95);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      text-align: center;
+      padding: 30px;
+    }
+
+    /* ================= 1. HOME SCREEN ================= */
     .home-header {
-      padding: 16px 20px 10px;
+      padding: 16px 20px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -118,9 +144,7 @@
       color: var(--text-main);
       cursor: pointer;
       font-size: 15px;
-      transition: all 0.2s;
     }
-    .circle-icon-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
 
     .home-content {
       flex: 1;
@@ -128,7 +152,7 @@
       padding: 10px 18px 80px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
     .status-row { display: flex; gap: 10px; }
@@ -136,7 +160,7 @@
       flex: 1;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 10px 12px;
+      padding: 11px 14px;
       border-radius: 14px;
       font-size: 12px;
       display: flex;
@@ -150,14 +174,16 @@
     .join-banner {
       background: linear-gradient(135deg, #0d1a38, #112652);
       border: 1px solid rgba(0, 122, 255, 0.3);
-      padding: 16px;
+      padding: 16px 18px;
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease;
     }
+    .join-banner:hover { transform: translateY(-2px); }
     .join-banner-left { display: flex; align-items: center; gap: 14px; }
     .hash-box {
       width: 42px;
@@ -170,14 +196,14 @@
       font-size: 18px;
       color: #fff;
     }
-    .join-banner-text h4 { font-size: 15px; font-weight: 700; }
+    .join-banner-text h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
     .join-banner-text p { font-size: 12px; color: var(--text-muted); }
 
     .section-title {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 4px;
     }
     .section-title h3 { font-size: 15px; font-weight: 700; }
     .section-title a { font-size: 12px; color: var(--accent-cyan); text-decoration: none; }
@@ -185,26 +211,27 @@
     .room-item {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 13px 15px;
-      border-radius: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .room-item:hover { border-color: rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
-    .room-item-left { display: flex; align-items: center; gap: 12px; }
+    .room-item:hover { border-color: rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+    .room-item-left { display: flex; align-items: center; gap: 14px; }
     .room-avatar {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 17px;
       color: #fff;
+      flex-shrink: 0;
     }
     .room-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .room-meta { font-size: 11px; color: var(--text-muted); }
@@ -251,7 +278,7 @@
       cursor: pointer;
     }
 
-    /* JOIN ROOM SCREEN */
+    /* ================= 2. JOIN ROOM SCREEN ================= */
     .nav-back-header {
       padding: 14px 18px;
       display: flex;
@@ -282,32 +309,34 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      overflow-y: auto;
     }
     .bubble-hero {
-      width: 90px;
-      height: 90px;
+      width: 86px;
+      height: 86px;
       border-radius: 50%;
       background: radial-gradient(circle, #007aff, #08214d);
-      box-shadow: 0 0 30px rgba(0, 122, 255, 0.4);
+      box-shadow: 0 0 25px rgba(0, 122, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 38px;
+      font-size: 36px;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
-    .code-input-box {
+
+    .input-field-group {
       width: 100%;
       background: var(--card-inner);
-      border: 1.5px solid rgba(0, 122, 255, 0.4);
-      padding: 14px 16px;
+      border: 1.5px solid rgba(0, 122, 255, 0.35);
+      padding: 13px 16px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-    .code-input-box input {
+    .input-field-group input {
       background: transparent;
       border: none;
       color: #fff;
@@ -315,8 +344,9 @@
       font-weight: 600;
       width: 100%;
       outline: none;
-      text-transform: uppercase;
     }
+    .input-field-group input::placeholder { color: #5a6e91; }
+
     .action-btn-primary {
       width: 100%;
       padding: 14px;
@@ -327,9 +357,56 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+      box-shadow: 0 8px 20px rgba(0, 122, 255, 0.35);
     }
 
-    /* CHAT SCREEN */
+    .or-divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px 0 16px;
+      color: #5a6e91;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .or-divider::before, .or-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .create-room-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(19, 31, 56, 0.8);
+      border: 1.5px solid rgba(0, 122, 255, 0.4);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .create-room-btn:hover {
+      background: rgba(0, 122, 255, 0.15);
+      border-color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    /* ================= 3. CHAT SCREEN ================= */
     .chat-topbar {
       height: 60px;
       padding: 0 16px;
@@ -419,20 +496,18 @@
     .msg-sender { font-size: 10px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px; }
     .msg-text { font-size: 14px; line-height: 1.4; }
     
-    /* इमेज मैसेज स्टाइल */
     .msg-image {
-      max-width: 220px;
-      max-height: 220px;
+      max-width: 200px;
+      max-height: 200px;
       border-radius: 12px;
       display: block;
       margin-top: 4px;
-      cursor: pointer;
       object-fit: cover;
+      pointer-events: none;
     }
 
     .msg-time { font-size: 10px; opacity: 0.7; text-align: right; margin-top: 3px; }
 
-    /* इमोजी और एक्शन बार */
     .chat-input-bar-container {
       flex-shrink: 0;
       width: 100%;
@@ -444,7 +519,6 @@
       gap: 6px;
     }
 
-    /* क्विक इमोजी बार */
     .quick-emojis {
       display: flex;
       gap: 8px;
@@ -458,10 +532,7 @@
       padding: 3px 10px;
       font-size: 16px;
       cursor: pointer;
-      user-select: none;
-      transition: transform 0.1s;
     }
-    .emoji-pill:hover { transform: scale(1.2); }
 
     .chat-input-bar {
       display: flex;
@@ -470,7 +541,6 @@
       width: 100%;
     }
 
-    /* कैमरा / फोटो अपलोड बटन */
     .attach-btn {
       width: 38px;
       height: 38px;
@@ -519,7 +589,7 @@
       box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
     }
 
-    /* MEMBERS SCREEN */
+    /* ================= 4. MEMBERS SCREEN ================= */
     .members-list {
       flex: 1;
       padding: 16px;
@@ -570,47 +640,143 @@
       gap: 8px;
     }
 
-    /* Name Modal */
-    .name-modal-overlay {
-      position: fixed;
+    /* ================= IN-APP MODALS (WEBSITE THEMED) ================= */
+    .app-modal-overlay {
+      position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(2, 6, 18, 0.88);
+      backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 200;
+      z-index: 250;
       padding: 20px;
+      animation: fadeIn 0.2s ease;
     }
-    .name-modal-box {
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .app-modal-box {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 24px;
-      border-radius: 20px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 24px 22px;
+      border-radius: 24px;
       width: 100%;
-      max-width: 340px;
+      max-width: 360px;
       text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 122, 255, 0.2);
+    }
+
+    /* न्यू रूम क्रेडेंशियल्स डिस्प्ले कार्ड्स */
+    .room-creds-container {
+      display: flex;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .cred-item {
+      flex: 1;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 12px 10px;
+      border-radius: 14px;
+      text-align: center;
+    }
+    .cred-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .cred-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+    }
+
+    .copy-chip-btn {
+      width: 100%;
+      padding: 11px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+      color: var(--accent-cyan);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+    .copy-chip-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-  <!-- छिपी हुई फाइल इनपुट (फोटो सेलेक्ट करने के लिए) -->
   <input type="file" id="imageFileInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
 
   <div class="app-viewport">
 
-    <!-- In-App Name Modal -->
-    <div class="name-modal-overlay" id="nameModal">
-      <div class="name-modal-box">
+    <!-- 1. Privacy Shield Alert Overlay -->
+    <div class="privacy-alert-overlay" id="privacyOverlay">
+      <div style="font-size: 42px; margin-bottom: 12px; color: #ef4444;"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3 style="margin-bottom: 8px;">Privacy Shield Active</h3>
+      <p style="font-size: 13px; color: var(--text-muted);">स्क्रीनशॉट या टैब बदलना सुरक्षित नहीं है। चैट ब्लर कर दी गई है।</p>
+      <button class="action-btn-primary" style="margin-top: 20px; width: auto; padding: 10px 24px;" onclick="resumePrivacy()">Tap to View</button>
+    </div>
+
+    <!-- 2. Name Modal (Website Themed) -->
+    <div class="app-modal-overlay" id="nameModal">
+      <div class="app-modal-box">
         <div style="font-size: 34px; margin-bottom: 8px;">👋</div>
         <h3 style="margin-bottom: 6px;">Enter your name</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">This is your name that will appear in the group</p>
-        <input type="text" id="modalNameInput" placeholder="EX: Rahul / Rohit" style="width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--card-inner); border: 1px solid var(--border-color); color: #fff; font-size: 14px; outline: none; margin-bottom: 14px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">This name will be visible to you in the chat</p>
+        <input type="text" id="modalNameInput" placeholder="उदा: Rahul / Rohit" style="width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--card-inner); border: 1px solid var(--border-color); color: #fff; font-size: 14px; outline: none; margin-bottom: 14px;">
         <button class="action-btn-primary" onclick="saveNameFromModal()">Save & Continue</button>
       </div>
     </div>
 
-    <!-- 1. HOME SCREEN -->
+    <!-- 3. NEW ROOM CREATED MODAL (वेबसाइट के डिजाइन वाला खूबसूरत पॉपअप) -->
+    <div class="app-modal-overlay" id="roomCreatedModal">
+      <div class="app-modal-box">
+        <div style="font-size: 38px; margin-bottom: 10px;">🎉</div>
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">New Room Created!</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">अपने दोस्तों को यह Room Code और PIN शेयर करें</p>
+
+        <!-- Credentials Boxes -->
+        <div class="room-creds-container">
+          <div class="cred-item">
+            <div class="cred-label">Room Code</div>
+            <div class="cred-val" id="popRoomCode">------</div>
+          </div>
+          <div class="cred-item">
+            <div class="cred-label">Secret PIN</div>
+            <div class="cred-val" id="popRoomPin" style="color: #f59e0b;">----</div>
+          </div>
+        </div>
+
+        <!-- Copy Button -->
+        <button class="copy-chip-btn" id="copyDetailsBtn" onclick="copyCreatedDetails()">
+          <i class="fa-regular fa-copy"></i> <span>Copy Details</span>
+        </button>
+
+        <!-- Proceed Button -->
+        <button class="action-btn-primary" onclick="proceedToChatFromModal()">
+          Enter Chat Room <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 1. HOME SCREEN ================= -->
     <div class="screen active" id="screen-home">
       <div class="home-header">
         <div class="logo-area">
@@ -647,7 +813,7 @@
           <a href="#" onclick="showScreen('screen-join')">Join with Code →</a>
         </div>
 
-        <div class="room-item" onclick="quickJoinRoom('StudyGroup')">
+        <div class="room-item" onclick="prepareQuickJoin('StudyGroup')">
           <div class="room-item-left">
             <div class="room-avatar" style="background: #007aff;">S</div>
             <div>
@@ -658,7 +824,7 @@
           <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
-        <div class="room-item" onclick="quickJoinRoom('Friends10')">
+        <div class="room-item" onclick="prepareQuickJoin('Friends10')">
           <div class="room-item-left">
             <div class="room-avatar" style="background: #8b5cf6;">F</div>
             <div>
@@ -669,7 +835,7 @@
           <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
-        <div class="room-item" onclick="quickJoinRoom('TechGroup')">
+        <div class="room-item" onclick="prepareQuickJoin('TechGroup')">
           <div class="room-item-left">
             <div class="room-avatar" style="background: #10b981;">T</div>
             <div>
@@ -688,7 +854,7 @@
       </div>
     </div>
 
-    <!-- 2. JOIN ROOM SCREEN -->
+    <!-- ================= 2. JOIN ROOM SCREEN ================= -->
     <div class="screen" id="screen-join">
       <div class="nav-back-header">
         <button class="back-btn" onclick="showScreen('screen-home')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -698,18 +864,31 @@
       <div class="enter-room-body">
         <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
         <h2 style="font-size:22px; font-weight:700; margin-bottom:6px;">Enter Room Code</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ask your friend for the room code.</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Ask your friend for the room code & PIN.</p>
 
-        <div class="code-input-box">
+        <div class="input-field-group">
           <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 16px;"></i>
-          <input type="text" id="customRoomInput" placeholder="e.g. 82982" />
+          <input type="text" id="customRoomInput" placeholder="Room Code (e.g. SHS3J)" />
         </div>
 
-        <button class="action-btn-primary" onclick="handleJoinSubmit()">Join Room</button>
+        <div class="input-field-group">
+          <i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 16px;"></i>
+          <input type="password" id="customPinInput" placeholder="Secret PIN / Password" maxlength="10" />
+        </div>
+
+        <button class="action-btn-primary" onclick="handleSecureJoinSubmit()">
+          Join Room <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <div class="or-divider">OR</div>
+
+        <button class="create-room-btn" onclick="generateAndCreateNewRoom()">
+          <i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Create New Room
+        </button>
       </div>
     </div>
 
-    <!-- 3. CHAT SCREEN -->
+    <!-- ================= 3. CHAT SCREEN ================= -->
     <div class="screen" id="screen-chat">
       <div class="chat-topbar">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -729,10 +908,7 @@
         <div class="date-badge">Today</div>
       </div>
 
-      <!-- इनपुट बार + इमोजी + फोटो बटन -->
       <div class="chat-input-bar-container">
-        
-        <!-- क्विक इमोजी बार -->
         <div class="quick-emojis">
           <span class="emoji-pill" onclick="insertEmoji('❤️')">❤️</span>
           <span class="emoji-pill" onclick="insertEmoji('😂')">😂</span>
@@ -740,25 +916,21 @@
           <span class="emoji-pill" onclick="insertEmoji('👍')">👍</span>
           <span class="emoji-pill" onclick="insertEmoji('😮')">😮</span>
           <span class="emoji-pill" onclick="insertEmoji('🙏')">🙏</span>
-          <span class="emoji-pill" onclick="insertEmoji('🎉')">🎉</span>
         </div>
 
         <div class="chat-input-bar">
-          <!-- फोटो भेजने का बटन -->
           <button class="attach-btn" onclick="document.getElementById('imageFileInput').click()" title="Send Photo">
             <i class="fa-solid fa-image"></i>
           </button>
-
           <div class="chat-input-field">
             <input type="text" id="messageInputField" placeholder="Type a message..." autocomplete="off" onkeypress="if(event.key === 'Enter') sendMsg()" />
           </div>
-          
           <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
       </div>
     </div>
 
-    <!-- 4. MEMBERS SCREEN -->
+    <!-- ================= 4. MEMBERS SCREEN ================= -->
     <div class="screen" id="screen-members">
       <div class="nav-back-header">
         <button class="back-btn" onclick="showScreen('screen-chat')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -795,17 +967,43 @@
     let currentUser = localStorage.getItem("chat_username") || "";
     let activeRoom = "";
     let userKeyRef = null;
-    let pendingRoomToJoin = null;
+    let pendingAction = null;
+    let newlyGeneratedCode = "";
+    let newlyGeneratedPin = "";
 
-    // ऑडियो नोटिफिकेशन (Beep / Pop Sound)
     const notificationSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+
+    // Anti-Screenshot & Blur Protection
+    window.addEventListener("blur", () => activatePrivacyBlur());
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) activatePrivacyBlur();
+    });
+
+    function activatePrivacyBlur() {
+      if (document.getElementById("screen-chat").classList.contains("active")) {
+        document.getElementById("chatMessages").classList.add("privacy-blurred");
+        document.getElementById("privacyOverlay").style.display = "flex";
+      }
+    }
+
+    function resumePrivacy() {
+      document.getElementById("chatMessages").classList.remove("privacy-blurred");
+      document.getElementById("privacyOverlay").style.display = "none";
+    }
+
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "PrintScreen" || e.keyCode === 44) {
+        activatePrivacyBlur();
+        navigator.clipboard.writeText("");
+      }
+    });
 
     function showScreen(screenId) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById(screenId).classList.add("active");
     }
 
-    function openNameModal(isEditing = false) {
+    function openNameModal() {
       document.getElementById("nameModal").style.display = "flex";
       const input = document.getElementById("modalNameInput");
       input.value = currentUser;
@@ -815,45 +1013,111 @@
     function saveNameFromModal() {
       const val = document.getElementById("modalNameInput").value.trim();
       if (!val) {
-        alert("कृपया एक नाम जरूर लिखें!");
         return;
       }
       currentUser = val;
       localStorage.setItem("chat_username", currentUser);
       document.getElementById("nameModal").style.display = "none";
 
-      if (pendingRoomToJoin) {
-        const room = pendingRoomToJoin;
-        pendingRoomToJoin = null;
-        joinRoomProcess(room);
+      if (pendingAction) {
+        const action = pendingAction;
+        pendingAction = null;
+        action();
       }
     }
 
-    function quickJoinRoom(code) {
+    function prepareQuickJoin(code) {
+      document.getElementById("customRoomInput").value = code;
+      showScreen("screen-join");
+      document.getElementById("customPinInput").focus();
+    }
+
+    /* =========================================================
+       CREATE NEW ROOM & THEMED POPUP
+       ========================================================= */
+    function generateAndCreateNewRoom() {
       if (!currentUser) {
-        pendingRoomToJoin = code;
+        pendingAction = () => generateAndCreateNewRoom();
         openNameModal();
         return;
       }
-      joinRoomProcess(code);
+
+      // रैंडम 6-अक्षर का रूम कोड (उदा: 7F3K9Q)
+      const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      newlyGeneratedCode = "";
+      for (let i = 0; i < 6; i++) {
+        newlyGeneratedCode += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+
+      // रैंडम 4-अंकों का PIN (उदा: 5824)
+      newlyGeneratedPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+      document.getElementById("customRoomInput").value = newlyGeneratedCode;
+      document.getElementById("customPinInput").value = newlyGeneratedPin;
+
+      // थीम वाले पॉपअप में कोड और पिन सेट करना
+      document.getElementById("popRoomCode").innerText = newlyGeneratedCode;
+      document.getElementById("popRoomPin").innerText = newlyGeneratedPin;
+      document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-regular fa-copy"></i> <span>Copy Details</span>`;
+
+      // इन-ऐप मोडल दिखाना (ब्राउज़र का सफेद अलर्ट नहीं)
+      document.getElementById("roomCreatedModal").style.display = "flex";
     }
 
-    function handleJoinSubmit() {
-      const code = document.getElementById("customRoomInput").value.trim().toUpperCase();
-      if (!code) {
-        alert("कृपया रूम कोड दर्ज करें!");
+    function copyCreatedDetails() {
+      const shareText = `Hey! Join my private DecaChat room:\nRoom Code: ${newlyGeneratedCode}\nPIN: ${newlyGeneratedPin}\nLink: https://deca-chat.onrender.com/`;
+      navigator.clipboard.writeText(shareText).then(() => {
+        document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-solid fa-check" style="color: #22c55e;"></i> <span style="color: #22c55e;">Copied to Clipboard!</span>`;
+      }).catch(() => {});
+    }
+
+    function proceedToChatFromModal() {
+      document.getElementById("roomCreatedModal").style.display = "none";
+      executeRoomEntry(newlyGeneratedCode, newlyGeneratedPin);
+    }
+
+    function handleSecureJoinSubmit() {
+      const room = document.getElementById("customRoomInput").value.trim().toUpperCase();
+      const pin = document.getElementById("customPinInput").value.trim();
+
+      if (!room || !pin) {
+        alert("कृपया Room Code और PIN दोनों दर्ज करें!");
         return;
       }
+
       if (!currentUser) {
-        pendingRoomToJoin = code;
+        pendingAction = () => executeRoomEntry(room, pin);
         openNameModal();
         return;
       }
-      joinRoomProcess(code);
+
+      executeRoomEntry(room, pin);
     }
 
-    function joinRoomProcess(roomCode) {
+    function executeRoomEntry(roomCode, enteredPin) {
       activeRoom = roomCode;
+      const roomMetaRef = db.ref(`rooms/${activeRoom}/meta`);
+
+      roomMetaRef.once("value", (snapshot) => {
+        const meta = snapshot.val();
+
+        if (!meta) {
+          roomMetaRef.set({
+            pin: enteredPin,
+            createdBy: currentUser,
+            createdAt: Date.now()
+          }).then(() => proceedUserJoin());
+        } else {
+          if (meta.pin !== enteredPin) {
+            alert("❌ गलत Secret PIN! आप इस प्राइवेट रूम में प्रवेश नहीं कर सकते।");
+            return;
+          }
+          proceedUserJoin();
+        }
+      });
+    }
+
+    function proceedUserJoin() {
       const roomUsersRef = db.ref(`rooms/${activeRoom}/users`);
 
       roomUsersRef.once("value", (snapshot) => {
@@ -861,7 +1125,7 @@
         const count = Object.keys(users).length;
 
         if (count >= 10) {
-          alert("माफ़ करें! यह रूम फुल है (अधिकतम 10 लोग)।");
+          alert("माफ़ करें! इस रूम में पहले से 10 लोग पूरे हो चुके हैं।");
           return;
         }
 
@@ -921,7 +1185,6 @@
         const data = snapshot.val();
         const isMine = data.sender === currentUser;
 
-        // जब कोई दूसरा मैसेज करे, तो साउंड प्ले हो
         if (!isMine && !isInitialLoad) {
           notificationSound.play().catch(() => {});
         }
@@ -931,10 +1194,9 @@
 
         const timeStr = data.time ? new Date(data.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
-        // अगर मैसेज इमेज है
         let contentHtml = "";
         if (data.image) {
-          contentHtml = `<img src="${data.image}" class="msg-image" onclick="window.open('${data.image}')" />`;
+          contentHtml = `<img src="${data.image}" class="msg-image" />`;
           if (data.text) contentHtml += `<div class="msg-text" style="margin-top:6px;">${data.text}</div>`;
         } else {
           contentHtml = `<div class="msg-text">${data.text}</div>`;
@@ -958,7 +1220,6 @@
       setTimeout(() => { isInitialLoad = false; }, 1000);
     }
 
-    // टेक्स्ट मैसेज भेजना
     function sendMsg() {
       const input = document.getElementById("messageInputField");
       const msg = input.value.trim();
@@ -974,14 +1235,12 @@
       input.focus();
     }
 
-    // इमोजी क्लिक पर इनपुट में इमोजी डालना
     function insertEmoji(emoji) {
       const input = document.getElementById("messageInputField");
       input.value += emoji;
       input.focus();
     }
 
-    // इमेज को कंप्रेस करके भेजने का फंक्शन
     function handleImageSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -990,20 +1249,16 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          // साइज को हल्का करने के लिए कैनवास पर स्केल डाउन करना
           const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 600;
+          const MAX_WIDTH = 500;
           const scaleSize = MAX_WIDTH / img.width;
           canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
           canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
 
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          // कंप्रेस किया हुआ Base64 डेटा
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.65);
 
-          // इमेज को डेटाबेस में भेजना
           db.ref(`rooms/${activeRoom}/messages`).push({
             sender: currentUser,
             image: compressedDataUrl,
@@ -1013,7 +1268,7 @@
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
-      event.target.value = ""; // रीसेट
+      event.target.value = "";
     }
 
     function leaveChat() {
