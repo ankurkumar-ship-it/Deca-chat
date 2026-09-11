@@ -9,7 +9,7 @@
 
   <!-- SEO Meta Tags -->
   <title>DecaChat - Private 10 Person Group Chat</title>
-  <meta name="description" content="DecaChat is a fast, secure and private 10-person group chat room. Create or join rooms with a simple code.">
+  <meta name="description" content="DecaChat is a fast, secure and private 10-person group chat room. Share messages, images and emojis.">
   <meta name="keywords" content="DecaChat, Deca Chat, private group chat, room code chat, free chat app">
   <meta name="robots" content="index, follow">
 
@@ -39,7 +39,6 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
-    /* बॉडी का बैकग्राउंड जो लैपटॉप पर दोनों साइड खूबसूरत ग्लो देगा */
     html, body {
       width: 100%;
       height: 100%;
@@ -54,11 +53,10 @@
       align-items: center;
     }
 
-    /* मुख्य कंटेनर जो लैपटॉप पर बीच में फ्रेम बनेगा और मोबाइल पर फुल स्क्रीन रहेगा */
     .app-viewport {
       width: 100%;
       height: 100%;
-      max-width: 480px; /* बिल्कुल इमेज 3 और 4 जैसा परफेक्ट साइज */
+      max-width: 480px;
       background: var(--bg-main);
       display: flex;
       flex-direction: column;
@@ -66,7 +64,6 @@
       overflow: hidden;
     }
 
-    /* लैपटॉप/डेस्कटॉप के लिए खास स्टाइलिंग */
     @media (min-width: 600px) {
       .app-viewport {
         height: 94vh;
@@ -77,7 +74,6 @@
       }
     }
 
-    /* स्क्रीन कंट्रोल */
     .screen {
       display: none;
       width: 100%;
@@ -88,7 +84,7 @@
     }
     .screen.active { display: flex; }
 
-    /* ================= 1. HOME SCREEN ================= */
+    /* HOME SCREEN */
     .home-header {
       padding: 16px 20px 10px;
       display: flex;
@@ -213,7 +209,6 @@
     .room-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .room-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* बॉटम नेविगेशन बार जो सिर्फ फ्रेम के नीचे रहेगा */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -256,7 +251,7 @@
       cursor: pointer;
     }
 
-    /* ================= 2. JOIN ROOM SCREEN ================= */
+    /* JOIN ROOM SCREEN */
     .nav-back-header {
       padding: 14px 18px;
       display: flex;
@@ -334,7 +329,7 @@
       cursor: pointer;
     }
 
-    /* ================= 3. CHAT SCREEN ================= */
+    /* CHAT SCREEN */
     .chat-topbar {
       height: 60px;
       padding: 0 16px;
@@ -360,7 +355,6 @@
     .chat-title-group h4 { font-size: 15px; font-weight: 700; }
     .chat-title-group p { font-size: 11px; color: var(--accent-cyan); display: flex; align-items: center; gap: 5px; }
 
-    /* स्क्रोल होने वाला मैसेज एरिया */
     .chat-area {
       flex: 1;
       padding: 16px;
@@ -424,28 +418,80 @@
 
     .msg-sender { font-size: 10px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px; }
     .msg-text { font-size: 14px; line-height: 1.4; }
+    
+    /* इमेज मैसेज स्टाइल */
+    .msg-image {
+      max-width: 220px;
+      max-height: 220px;
+      border-radius: 12px;
+      display: block;
+      margin-top: 4px;
+      cursor: pointer;
+      object-fit: cover;
+    }
+
     .msg-time { font-size: 10px; opacity: 0.7; text-align: right; margin-top: 3px; }
 
-    /* इनपुट बार: हमेशा फ्रेम के नीचे रहेगा */
+    /* इमोजी और एक्शन बार */
     .chat-input-bar-container {
       flex-shrink: 0;
       width: 100%;
       background: #0d1527;
       border-top: 1px solid var(--border-color);
-      padding: 10px 14px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
+
+    /* क्विक इमोजी बार */
+    .quick-emojis {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .emoji-pill {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 3px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+    }
+    .emoji-pill:hover { transform: scale(1.2); }
+
     .chat-input-bar {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
     }
+
+    /* कैमरा / फोटो अपलोड बटन */
+    .attach-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
     .chat-input-field {
       flex: 1;
       background: var(--card-inner);
       border: 1px solid var(--border-color);
       border-radius: 24px;
-      padding: 9px 16px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
     }
@@ -473,7 +519,7 @@
       box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
     }
 
-    /* ================= 4. MEMBERS SCREEN ================= */
+    /* MEMBERS SCREEN */
     .members-list {
       flex: 1;
       padding: 16px;
@@ -548,7 +594,9 @@
 </head>
 <body>
 
-  <!-- Main Viewport Box -->
+  <!-- छिपी हुई फाइल इनपुट (फोटो सेलेक्ट करने के लिए) -->
+  <input type="file" id="imageFileInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+
   <div class="app-viewport">
 
     <!-- In-App Name Modal -->
@@ -661,7 +709,7 @@
       </div>
     </div>
 
-    <!-- 3. CHAT SCREEN (MOBILE & LAPTOP PROPER FRAME) -->
+    <!-- 3. CHAT SCREEN -->
     <div class="screen" id="screen-chat">
       <div class="chat-topbar">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -681,11 +729,30 @@
         <div class="date-badge">Today</div>
       </div>
 
+      <!-- इनपुट बार + इमोजी + फोटो बटन -->
       <div class="chat-input-bar-container">
+        
+        <!-- क्विक इमोजी बार -->
+        <div class="quick-emojis">
+          <span class="emoji-pill" onclick="insertEmoji('❤️')">❤️</span>
+          <span class="emoji-pill" onclick="insertEmoji('😂')">😂</span>
+          <span class="emoji-pill" onclick="insertEmoji('🔥')">🔥</span>
+          <span class="emoji-pill" onclick="insertEmoji('👍')">👍</span>
+          <span class="emoji-pill" onclick="insertEmoji('😮')">😮</span>
+          <span class="emoji-pill" onclick="insertEmoji('🙏')">🙏</span>
+          <span class="emoji-pill" onclick="insertEmoji('🎉')">🎉</span>
+        </div>
+
         <div class="chat-input-bar">
+          <!-- फोटो भेजने का बटन -->
+          <button class="attach-btn" onclick="document.getElementById('imageFileInput').click()" title="Send Photo">
+            <i class="fa-solid fa-image"></i>
+          </button>
+
           <div class="chat-input-field">
             <input type="text" id="messageInputField" placeholder="Type a message..." autocomplete="off" onkeypress="if(event.key === 'Enter') sendMsg()" />
           </div>
+          
           <button class="chat-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
       </div>
@@ -729,6 +796,9 @@
     let activeRoom = "";
     let userKeyRef = null;
     let pendingRoomToJoin = null;
+
+    // ऑडियो नोटिफिकेशन (Beep / Pop Sound)
+    const notificationSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
 
     function showScreen(screenId) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
@@ -844,21 +914,37 @@
       const messagesContainer = document.getElementById("chatMessages");
       messagesContainer.innerHTML = `<div class="date-badge">Today</div>`;
 
+      let isInitialLoad = true;
       db.ref(`rooms/${activeRoom}/messages`).off();
+      
       db.ref(`rooms/${activeRoom}/messages`).on("child_added", (snapshot) => {
         const data = snapshot.val();
         const isMine = data.sender === currentUser;
+
+        // जब कोई दूसरा मैसेज करे, तो साउंड प्ले हो
+        if (!isMine && !isInitialLoad) {
+          notificationSound.play().catch(() => {});
+        }
 
         const row = document.createElement("div");
         row.className = `chat-row ${isMine ? 'mine' : 'other'}`;
 
         const timeStr = data.time ? new Date(data.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
+        // अगर मैसेज इमेज है
+        let contentHtml = "";
+        if (data.image) {
+          contentHtml = `<img src="${data.image}" class="msg-image" onclick="window.open('${data.image}')" />`;
+          if (data.text) contentHtml += `<div class="msg-text" style="margin-top:6px;">${data.text}</div>`;
+        } else {
+          contentHtml = `<div class="msg-text">${data.text}</div>`;
+        }
+
         row.innerHTML = `
           <div class="msg-user-avatar">${data.sender.charAt(0).toUpperCase()}</div>
           <div class="msg-bubble">
             ${!isMine ? `<div class="msg-sender">${data.sender}</div>` : ''}
-            <div class="msg-text">${data.text}</div>
+            ${contentHtml}
             <div class="msg-time">${timeStr}</div>
           </div>
         `;
@@ -868,8 +954,11 @@
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }, 50);
       });
+
+      setTimeout(() => { isInitialLoad = false; }, 1000);
     }
 
+    // टेक्स्ट मैसेज भेजना
     function sendMsg() {
       const input = document.getElementById("messageInputField");
       const msg = input.value.trim();
@@ -883,6 +972,48 @@
 
       input.value = "";
       input.focus();
+    }
+
+    // इमोजी क्लिक पर इनपुट में इमोजी डालना
+    function insertEmoji(emoji) {
+      const input = document.getElementById("messageInputField");
+      input.value += emoji;
+      input.focus();
+    }
+
+    // इमेज को कंप्रेस करके भेजने का फंक्शन
+    function handleImageSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // साइज को हल्का करने के लिए कैनवास पर स्केल डाउन करना
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 600;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+          canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          // कंप्रेस किया हुआ Base64 डेटा
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+
+          // इमेज को डेटाबेस में भेजना
+          db.ref(`rooms/${activeRoom}/messages`).push({
+            sender: currentUser,
+            image: compressedDataUrl,
+            time: Date.now()
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = ""; // रीसेट
     }
 
     function leaveChat() {
