@@ -8,8 +8,8 @@
   <meta name="google-site-verification" content="6jiXl6s2IAC-aG8T4irxKVlaAU4hgpy3pNOG39xYv3U" />
 
   <!-- SEO Meta Tags -->
-  <title>DecaChat - Private 10 Person Group Chat</title>
-  <meta name="description" content="DecaChat is a fast, PIN-protected and private 10-person group chat room. End-to-end PIN access with anti-screenshot privacy.">
+  <title>DecaChat - Private & Fast Group Chat</title>
+  <meta name="description" content="DecaChat is a fast, secure and private group chat web app. Create or join custom rooms with a simple room code.">
   <meta name="keywords" content="DecaChat, Deca Chat, private group chat, room code chat, free chat app">
   <meta name="robots" content="index, follow">
 
@@ -41,7 +41,7 @@
       user-select: none;
     }
 
-    input, textarea {
+    input, textarea, select {
       -webkit-user-select: auto;
       user-select: auto;
     }
@@ -220,7 +220,7 @@
       transition: all 0.2s;
     }
     .room-item:hover { border-color: rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
-    .room-item-left { display: flex; align-items: center; gap: 14px; }
+    .room-item-left { display: flex; align-items: center; gap: 14px; flex: 1; }
     .room-avatar {
       width: 44px;
       height: 44px;
@@ -235,6 +235,18 @@
     }
     .room-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .room-meta { font-size: 11px; color: var(--text-muted); }
+
+    /* Rename Button Style */
+    .rename-btn {
+      background: transparent;
+      border: none;
+      color: #5a6e91;
+      padding: 6px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .rename-btn:hover { color: var(--accent-cyan); }
 
     .bottom-nav {
       position: absolute;
@@ -278,7 +290,7 @@
       cursor: pointer;
     }
 
-    /* ================= 2. JOIN ROOM SCREEN ================= */
+    /* ================= 2. JOIN / CREATE ROOM SCREEN ================= */
     .nav-back-header {
       padding: 14px 18px;
       display: flex;
@@ -334,7 +346,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .input-field-group input {
       background: transparent;
@@ -344,8 +356,39 @@
       font-weight: 600;
       width: 100%;
       outline: none;
+      text-transform: uppercase;
     }
-    .input-field-group input::placeholder { color: #5a6e91; }
+    .input-field-group input::placeholder { color: #5a6e91; text-transform: none; }
+
+    .capacity-select-box {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1.5px solid rgba(0, 122, 255, 0.35);
+      padding: 11px 16px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .capacity-select-box label {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .capacity-select-box select {
+      background: #0d1527;
+      border: 1px solid var(--border-color);
+      color: var(--accent-cyan);
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
     .action-btn-primary {
       width: 100%;
@@ -361,7 +404,6 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 4px;
       box-shadow: 0 8px 20px rgba(0, 122, 255, 0.35);
     }
 
@@ -371,7 +413,7 @@
       align-items: center;
       justify-content: center;
       gap: 14px;
-      margin: 20px 0 16px;
+      margin: 20px 0 14px;
       color: #5a6e91;
       font-size: 12px;
       font-weight: 700;
@@ -640,7 +682,7 @@
       gap: 8px;
     }
 
-    /* ================= IN-APP MODALS (WEBSITE THEMED) ================= */
+    /* Modals */
     .app-modal-overlay {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -670,37 +712,30 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 122, 255, 0.2);
     }
 
-    /* न्यू रूम क्रेडेंशियल्स डिस्प्ले कार्ड्स */
-    .room-creds-container {
-      display: flex;
-      gap: 10px;
+    .room-code-badge {
+      background: var(--card-inner);
+      border: 1.5px solid rgba(0, 122, 255, 0.4);
+      padding: 14px;
+      border-radius: 14px;
       margin: 16px 0;
     }
-    .cred-item {
-      flex: 1;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      padding: 12px 10px;
-      border-radius: 14px;
-      text-align: center;
-    }
-    .cred-label {
+    .room-code-badge div {
       font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 4px;
     }
-    .cred-val {
-      font-size: 17px;
+    .room-code-badge h2 {
+      font-size: 24px;
       font-weight: 800;
       color: var(--accent-cyan);
-      letter-spacing: 1px;
+      letter-spacing: 2px;
     }
 
     .copy-chip-btn {
       width: 100%;
-      padding: 11px;
+      padding: 12px;
       background: rgba(56, 189, 248, 0.1);
       border: 1px dashed rgba(56, 189, 248, 0.4);
       color: var(--accent-cyan);
@@ -712,11 +747,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-bottom: 16px;
-      transition: all 0.2s;
-    }
-    .copy-chip-btn:hover {
-      background: rgba(56, 189, 248, 0.2);
+      margin-bottom: 14px;
     }
   </style>
 </head>
@@ -726,7 +757,7 @@
 
   <div class="app-viewport">
 
-    <!-- 1. Privacy Shield Alert Overlay -->
+    <!-- Privacy Shield Alert Overlay -->
     <div class="privacy-alert-overlay" id="privacyOverlay">
       <div style="font-size: 42px; margin-bottom: 12px; color: #ef4444;"><i class="fa-solid fa-shield-halved"></i></div>
       <h3 style="margin-bottom: 8px;">Privacy Shield Active</h3>
@@ -734,7 +765,7 @@
       <button class="action-btn-primary" style="margin-top: 20px; width: auto; padding: 10px 24px;" onclick="resumePrivacy()">Tap to View</button>
     </div>
 
-    <!-- 2. Name Modal (Website Themed) -->
+    <!-- Name Modal -->
     <div class="app-modal-overlay" id="nameModal">
       <div class="app-modal-box">
         <div style="font-size: 34px; margin-bottom: 8px;">👋</div>
@@ -745,31 +776,36 @@
       </div>
     </div>
 
-    <!-- 3. NEW ROOM CREATED MODAL (वेबसाइट के डिजाइन वाला खूबसूरत पॉपअप) -->
+    <!-- Rename Room Modal -->
+    <div class="app-modal-overlay" id="renameModal">
+      <div class="app-modal-box">
+        <div style="font-size: 34px; margin-bottom: 8px;">✏️</div>
+        <h3 style="margin-bottom: 6px;">Change room name</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Enter new name</p>
+        <input type="text" id="renameInput" placeholder="उदा: VIP Gang" style="width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--card-inner); border: 1px solid var(--border-color); color: #fff; font-size: 14px; outline: none; margin-bottom: 14px;">
+        <div style="display: flex; gap: 10px;">
+          <button class="create-room-btn" style="flex:1; padding: 10px;" onclick="closeRenameModal()">Cancel</button>
+          <button class="action-btn-primary" style="flex:1; padding: 10px;" onclick="saveRenamedRoom()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Room Created Modal -->
     <div class="app-modal-overlay" id="roomCreatedModal">
       <div class="app-modal-box">
-        <div style="font-size: 38px; margin-bottom: 10px;">🎉</div>
+        <div style="font-size: 38px; margin-bottom: 8px;">🎉</div>
         <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">New Room Created!</h3>
-        <p style="font-size: 12px; color: var(--text-muted);">अपने दोस्तों को यह Room Code और PIN शेयर करें</p>
+        <p style="font-size: 12px; color: var(--text-muted);" id="popRoomLimitText">Max Limit: 10 Members</p>
 
-        <!-- Credentials Boxes -->
-        <div class="room-creds-container">
-          <div class="cred-item">
-            <div class="cred-label">Room Code</div>
-            <div class="cred-val" id="popRoomCode">------</div>
-          </div>
-          <div class="cred-item">
-            <div class="cred-label">Secret PIN</div>
-            <div class="cred-val" id="popRoomPin" style="color: #f59e0b;">----</div>
-          </div>
+        <div class="room-code-badge">
+          <div>Room Code</div>
+          <h2 id="popRoomCode">------</h2>
         </div>
 
-        <!-- Copy Button -->
         <button class="copy-chip-btn" id="copyDetailsBtn" onclick="copyCreatedDetails()">
-          <i class="fa-regular fa-copy"></i> <span>Copy Details</span>
+          <i class="fa-regular fa-copy"></i> <span>Copy Room Code</span>
         </button>
 
-        <!-- Proceed Button -->
         <button class="action-btn-primary" onclick="proceedToChatFromModal()">
           Enter Chat Room <i class="fa-solid fa-arrow-right"></i>
         </button>
@@ -794,15 +830,15 @@
       <div class="home-content">
         <div class="status-row">
           <div class="pill"><span class="dot-green"></span> Online Now</div>
-          <div class="pill"><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i> Max <b>10 Members</b></div>
+          <div class="pill"><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i> Max <b>20 Members</b></div>
         </div>
 
-        <div class="join-banner" onclick="showScreen('screen-join')">
+        <div class="join-banner" onclick="openJoinScreenEmpty()">
           <div class="join-banner-left">
             <div class="hash-box"><i class="fa-solid fa-hashtag"></i></div>
             <div class="join-banner-text">
-              <h4>Join a Room</h4>
-              <p>Enter room code to join</p>
+              <h4>Join / Create Room</h4>
+              <p>Enter room code or create new</p>
             </div>
           </div>
           <i class="fa-solid fa-chevron-right" style="color: var(--accent-cyan);"></i>
@@ -810,51 +846,63 @@
 
         <div class="section-title">
           <h3>Quick Rooms</h3>
-          <a href="#" onclick="showScreen('screen-join')">Join with Code →</a>
+          <a href="#" onclick="openJoinScreenEmpty()">Join with Code →</a>
         </div>
 
-        <div class="room-item" onclick="prepareQuickJoin('StudyGroup')">
+        <!-- Room 1: Study Group -->
+        <div class="room-item" onclick="promptQuickJoin('room_1_code', 'STUDY-7A9K')">
           <div class="room-item-left">
-            <div class="room-avatar" style="background: #007aff;">S</div>
+            <div class="room-avatar" style="background: #007aff;" id="room_1_avatar">S</div>
             <div>
-              <div class="room-name">Study Group</div>
-              <div class="room-meta">Code: StudyGroup • 10 Max</div>
+              <div class="room-name" id="room_1_title">Study Group</div>
+              <div class="room-meta"> • 20 Max</div>
             </div>
           </div>
+          <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal('room_1', 'Study Group')" title="Rename Room">
+            <i class="fa-solid fa-pen"></i>
+          </button>
           <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
-        <div class="room-item" onclick="prepareQuickJoin('Friends10')">
+        <!-- Room 2: Friends Forever -->
+        <div class="room-item" onclick="promptQuickJoin('room_2_code', 'FRND-4X2P')">
           <div class="room-item-left">
-            <div class="room-avatar" style="background: #8b5cf6;">F</div>
+            <div class="room-avatar" style="background: #8b5cf6;" id="room_2_avatar">F</div>
             <div>
-              <div class="room-name">Friends Forever</div>
-              <div class="room-meta">Code: Friends10 • 10 Max</div>
+              <div class="room-name" id="room_2_title">Friends Forever</div>
+              <div class="room-meta"> • 20 Max</div>
             </div>
           </div>
+          <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal('room_2', 'Friends Forever')" title="Rename Room">
+            <i class="fa-solid fa-pen"></i>
+          </button>
           <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
 
-        <div class="room-item" onclick="prepareQuickJoin('TechGroup')">
+        <!-- Room 3: Tech & Coding -->
+        <div class="room-item" onclick="promptQuickJoin('room_3_code', 'TECH-9M3R')">
           <div class="room-item-left">
-            <div class="room-avatar" style="background: #10b981;">T</div>
+            <div class="room-avatar" style="background: #10b981;" id="room_3_avatar">T</div>
             <div>
-              <div class="room-name">Tech & Coding</div>
-              <div class="room-meta">Code: TechGroup • 10 Max</div>
+              <div class="room-name" id="room_3_title">Tech & Coding</div>
+              <div class="room-meta"> • 20 Max</div>
             </div>
           </div>
+          <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal('room_3', 'Tech & Coding')" title="Rename Room">
+            <i class="fa-solid fa-pen"></i>
+          </button>
           <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 13px;"></i>
         </div>
       </div>
 
       <div class="bottom-nav">
         <button class="nav-btn active"><i class="fa-solid fa-house"></i>Home</button>
-        <button class="nav-btn-center" onclick="showScreen('screen-join')"><i class="fa-solid fa-plus"></i></button>
+        <button class="nav-btn-center" onclick="openJoinScreenEmpty()"><i class="fa-solid fa-plus"></i></button>
         <button class="nav-btn" onclick="openNameModal(true)"><i class="fa-regular fa-user"></i>Profile</button>
       </div>
     </div>
 
-    <!-- ================= 2. JOIN ROOM SCREEN ================= -->
+    <!-- ================= 2. JOIN / CREATE ROOM SCREEN ================= -->
     <div class="screen" id="screen-join">
       <div class="nav-back-header">
         <button class="back-btn" onclick="showScreen('screen-home')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -864,26 +912,47 @@
       <div class="enter-room-body">
         <div class="bubble-hero"><i class="fa-solid fa-comments"></i></div>
         <h2 style="font-size:22px; font-weight:700; margin-bottom:6px;">Enter Room Code</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Ask your friend for the room code & PIN.</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Ask your friend for the room code.</p>
 
+        <!-- Room Code Input -->
         <div class="input-field-group">
           <i class="fa-solid fa-hashtag" style="color: var(--accent-cyan); font-size: 16px;"></i>
-          <input type="text" id="customRoomInput" placeholder="Room Code (e.g. SHS3J)" />
+          <input type="text" id="customRoomInput" placeholder="Room Code (e.g. DCABE)" />
         </div>
 
-        <div class="input-field-group">
-          <i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 16px;"></i>
-          <input type="password" id="customPinInput" placeholder="Secret PIN / Password" maxlength="10" />
-        </div>
-
-        <button class="action-btn-primary" onclick="handleSecureJoinSubmit()">
+        <button class="action-btn-primary" onclick="handleJoinSubmit()">
           Join Room <i class="fa-solid fa-chevron-right"></i>
         </button>
 
-        <div class="or-divider">OR</div>
+        <div class="or-divider">OR CREATE CUSTOM ROOM</div>
+
+        <!-- Custom Capacity Select (2 से 20 तक) -->
+        <div class="capacity-select-box">
+          <label><i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Max Members:</label>
+          <select id="roomCapacitySelect">
+            <option value="2">2 Members</option>
+            <option value="3">3 Members</option>
+            <option value="4">4 Members</option>
+            <option value="5">5 Members</option>
+            <option value="6">6 Members</option>
+            <option value="7">7 Members</option>
+            <option value="8">8 Members</option>
+            <option value="9">9 Members</option>
+            <option value="10" selected>10 Members (Default)</option>
+            <option value="11">11 Members</option>
+            <option value="12">12 Members</option>
+            <option value="13">14 Members</option>
+            <option value="15">15 Members</option>
+            <option value="16">16 Members</option>
+            <option value="17">17 Members</option>
+            <option value="18">18 Members</option>
+            <option value="19">19 Members</option>
+            <option value="20">20 Members (Max)</option>
+          </select>
+        </div>
 
         <button class="create-room-btn" onclick="generateAndCreateNewRoom()">
-          <i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Create New Room
+          <i class="fa-solid fa-plus-circle" style="color: var(--accent-cyan);"></i> Create New Room
         </button>
       </div>
     </div>
@@ -937,7 +1006,7 @@
         <h3>Room Members</h3>
       </div>
       <div style="padding: 14px 16px 0; font-size:13px; color:var(--text-muted);">
-        Active Users (<span id="memberCountBadge">0</span>/10)
+        Active Users (<span id="memberCountBadge">0</span>/<span id="memberCapacityBadge">20</span>)
       </div>
       <div class="members-list" id="memberList"></div>
       <div class="leave-room-footer">
@@ -966,12 +1035,52 @@
 
     let currentUser = localStorage.getItem("chat_username") || "";
     let activeRoom = "";
+    let roomMaxLimit = 20;
     let userKeyRef = null;
     let pendingAction = null;
     let newlyGeneratedCode = "";
-    let newlyGeneratedPin = "";
+    let currentRenamingRoomId = "";
 
     const notificationSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+
+    // Local Storage से कस्टम नाम लोड करना
+    function loadCustomRoomTitles() {
+      const r1 = localStorage.getItem("room_1_name") || "Study Group";
+      const r2 = localStorage.getItem("room_2_name") || "Friends Forever";
+      const r3 = localStorage.getItem("room_3_name") || "Tech & Coding";
+
+      document.getElementById("room_1_title").innerText = r1;
+      document.getElementById("room_1_avatar").innerText = r1.charAt(0).toUpperCase();
+
+      document.getElementById("room_2_title").innerText = r2;
+      document.getElementById("room_2_avatar").innerText = r2.charAt(0).toUpperCase();
+
+      document.getElementById("room_3_title").innerText = r3;
+      document.getElementById("room_3_avatar").innerText = r3.charAt(0).toUpperCase();
+    }
+    loadCustomRoomTitles();
+
+    // रूम का नाम बदलने का मॉडल
+    function openRenameModal(roomId, defaultName) {
+      currentRenamingRoomId = roomId;
+      const current = localStorage.getItem(roomId + "_name") || defaultName;
+      document.getElementById("renameInput").value = current;
+      document.getElementById("renameModal").style.display = "flex";
+      document.getElementById("renameInput").focus();
+    }
+
+    function closeRenameModal() {
+      document.getElementById("renameModal").style.display = "none";
+    }
+
+    function saveRenamedRoom() {
+      const val = document.getElementById("renameInput").value.trim();
+      if (val) {
+        localStorage.setItem(currentRenamingRoomId + "_name", val);
+        loadCustomRoomTitles();
+      }
+      closeRenameModal();
+    }
 
     // Anti-Screenshot & Blur Protection
     window.addEventListener("blur", () => activatePrivacyBlur());
@@ -1012,9 +1121,7 @@
 
     function saveNameFromModal() {
       const val = document.getElementById("modalNameInput").value.trim();
-      if (!val) {
-        return;
-      }
+      if (!val) return;
       currentUser = val;
       localStorage.setItem("chat_username", currentUser);
       document.getElementById("nameModal").style.display = "none";
@@ -1026,15 +1133,33 @@
       }
     }
 
-    function prepareQuickJoin(code) {
-      document.getElementById("customRoomInput").value = code;
+    function openJoinScreenEmpty() {
+      document.getElementById("customRoomInput").value = "";
       showScreen("screen-join");
-      document.getElementById("customPinInput").focus();
     }
 
-    /* =========================================================
-       CREATE NEW ROOM & THEMED POPUP
-       ========================================================= */
+    // Quick Room पर क्लिक करने पर सीधे चैट में नहीं, कोड वाली स्क्रीन पर ले जाना
+    function promptQuickJoin(key, code) {
+      document.getElementById("customRoomInput").value = code;
+      showScreen("screen-join");
+    }
+
+    function handleJoinSubmit() {
+      const room = document.getElementById("customRoomInput").value.trim().toUpperCase();
+      if (!room) {
+        alert("कृपया Room Code दर्ज करें!");
+        return;
+      }
+
+      if (!currentUser) {
+        pendingAction = () => executeRoomEntry(room);
+        openNameModal();
+        return;
+      }
+
+      executeRoomEntry(room);
+    }
+
     function generateAndCreateNewRoom() {
       if (!currentUser) {
         pendingAction = () => generateAndCreateNewRoom();
@@ -1042,103 +1167,67 @@
         return;
       }
 
-      // रैंडम 6-अक्षर का रूम कोड (उदा: 7F3K9Q)
+      const selectedLimit = parseInt(document.getElementById("roomCapacitySelect").value, 10) || 10;
+
       const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
       newlyGeneratedCode = "";
       for (let i = 0; i < 6; i++) {
         newlyGeneratedCode += characters.charAt(Math.floor(Math.random() * characters.length));
       }
 
-      // रैंडम 4-अंकों का PIN (उदा: 5824)
-      newlyGeneratedPin = Math.floor(1000 + Math.random() * 9000).toString();
-
       document.getElementById("customRoomInput").value = newlyGeneratedCode;
-      document.getElementById("customPinInput").value = newlyGeneratedPin;
-
-      // थीम वाले पॉपअप में कोड और पिन सेट करना
       document.getElementById("popRoomCode").innerText = newlyGeneratedCode;
-      document.getElementById("popRoomPin").innerText = newlyGeneratedPin;
-      document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-regular fa-copy"></i> <span>Copy Details</span>`;
+      document.getElementById("popRoomLimitText").innerText = `Max Limit: ${selectedLimit} Members`;
+      document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-regular fa-copy"></i> <span>Copy Room Code</span>`;
 
-      // इन-ऐप मोडल दिखाना (ब्राउज़र का सफेद अलर्ट नहीं)
+      db.ref(`rooms/${newlyGeneratedCode}/meta`).set({
+        maxLimit: selectedLimit,
+        createdAt: Date.now()
+      });
+
       document.getElementById("roomCreatedModal").style.display = "flex";
     }
 
     function copyCreatedDetails() {
-      const shareText = `Hey! Join my private DecaChat room:\nRoom Code: ${newlyGeneratedCode}\nPIN: ${newlyGeneratedPin}\nLink: https://deca-chat.onrender.com/`;
+      const shareText = `Hey! Join my private DecaChat room:\nRoom Code: ${newlyGeneratedCode}\nLink: https://deca-chat.onrender.com/`;
       navigator.clipboard.writeText(shareText).then(() => {
-        document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-solid fa-check" style="color: #22c55e;"></i> <span style="color: #22c55e;">Copied to Clipboard!</span>`;
+        document.getElementById("copyDetailsBtn").innerHTML = `<i class="fa-solid fa-check" style="color: #22c55e;"></i> <span style="color: #22c55e;">Code Copied!</span>`;
       }).catch(() => {});
     }
 
     function proceedToChatFromModal() {
       document.getElementById("roomCreatedModal").style.display = "none";
-      executeRoomEntry(newlyGeneratedCode, newlyGeneratedPin);
+      executeRoomEntry(newlyGeneratedCode);
     }
 
-    function handleSecureJoinSubmit() {
-      const room = document.getElementById("customRoomInput").value.trim().toUpperCase();
-      const pin = document.getElementById("customPinInput").value.trim();
-
-      if (!room || !pin) {
-        alert("कृपया Room Code और PIN दोनों दर्ज करें!");
-        return;
-      }
-
-      if (!currentUser) {
-        pendingAction = () => executeRoomEntry(room, pin);
-        openNameModal();
-        return;
-      }
-
-      executeRoomEntry(room, pin);
-    }
-
-    function executeRoomEntry(roomCode, enteredPin) {
+    function executeRoomEntry(roomCode) {
       activeRoom = roomCode;
-      const roomMetaRef = db.ref(`rooms/${activeRoom}/meta`);
 
-      roomMetaRef.once("value", (snapshot) => {
-        const meta = snapshot.val();
+      db.ref(`rooms/${activeRoom}/meta`).once("value", (metaSnap) => {
+        const meta = metaSnap.val();
+        roomMaxLimit = (meta && meta.maxLimit) ? meta.maxLimit : 20;
 
-        if (!meta) {
-          roomMetaRef.set({
-            pin: enteredPin,
-            createdBy: currentUser,
-            createdAt: Date.now()
-          }).then(() => proceedUserJoin());
-        } else {
-          if (meta.pin !== enteredPin) {
-            alert("❌ गलत Secret PIN! आप इस प्राइवेट रूम में प्रवेश नहीं कर सकते।");
+        const roomUsersRef = db.ref(`rooms/${activeRoom}/users`);
+        roomUsersRef.once("value", (snapshot) => {
+          const users = snapshot.val() || {};
+          const count = Object.keys(users).length;
+
+          if (count >= roomMaxLimit) {
+            alert(`माफ़ करें! यह रूम फुल है (अधिकतम ${roomMaxLimit} लोग)।`);
             return;
           }
-          proceedUserJoin();
-        }
-      });
-    }
 
-    function proceedUserJoin() {
-      const roomUsersRef = db.ref(`rooms/${activeRoom}/users`);
+          userKeyRef = roomUsersRef.push();
+          userKeyRef.set({ name: currentUser, joinedAt: Date.now() });
+          userKeyRef.onDisconnect().remove();
 
-      roomUsersRef.once("value", (snapshot) => {
-        const users = snapshot.val() || {};
-        const count = Object.keys(users).length;
+          document.getElementById("chatRoomHeaderTitle").innerText = activeRoom;
+          document.getElementById("chatRoomAvatar").innerText = activeRoom.charAt(0).toUpperCase();
 
-        if (count >= 10) {
-          alert("माफ़ करें! इस रूम में पहले से 10 लोग पूरे हो चुके हैं।");
-          return;
-        }
-
-        userKeyRef = roomUsersRef.push();
-        userKeyRef.set({ name: currentUser, joinedAt: Date.now() });
-        userKeyRef.onDisconnect().remove();
-
-        document.getElementById("chatRoomHeaderTitle").innerText = activeRoom;
-        document.getElementById("chatRoomAvatar").innerText = activeRoom.charAt(0).toUpperCase();
-
-        showScreen("screen-chat");
-        listenToMessages();
-        listenToUsers();
+          showScreen("screen-chat");
+          listenToMessages();
+          listenToUsers();
+        });
       });
     }
 
@@ -1149,8 +1238,9 @@
         memberList.innerHTML = "";
 
         const count = Object.keys(users).length;
-        document.getElementById("onlineCountText").innerText = `${count}/10 Online`;
+        document.getElementById("onlineCountText").innerText = `${count}/${roomMaxLimit} Online`;
         document.getElementById("memberCountBadge").innerText = count;
+        document.getElementById("memberCapacityBadge").innerText = roomMaxLimit;
 
         let index = 0;
         for (let id in users) {
@@ -1166,7 +1256,7 @@
                 <div style="font-size: 11px; color: var(--online-green);">● Online</div>
               </div>
             </div>
-            <span style="font-size:11px; color:var(--text-muted);">${index === 0 ? 'Admin' : 'Member'}</span>
+            <span style="font-size:11px; color:var(--text-muted);">${index === 0 ? 'Host' : 'Member'}</span>
           `;
           memberList.appendChild(div);
           index++;
