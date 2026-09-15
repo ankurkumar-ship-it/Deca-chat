@@ -150,16 +150,13 @@
       align-items: center;
     }
     .logo-area { display: flex; align-items: center; gap: 12px; }
-    .app-icon {
+    .app-logo-img {
       width: 44px;
       height: 44px;
-      background: linear-gradient(135deg, #007aff, #00c6ff);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      object-fit: cover;
       box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
     .title-area h2 { font-size: 19px; font-weight: 700; }
     .title-area p { font-size: 12px; color: var(--text-muted); }
@@ -847,13 +844,14 @@
     <!-- ================= 1. HOME SCREEN ================= -->
     <div class="screen active" id="screen-home">
       <div class="home-header">
-        <div class="logo-area">
-          <div class="app-icon"><i class="fa-solid fa-comment-dots"></i></div>
-          <div class="title-area">
-            <h2>Group Chat</h2>
-            <p>Connect • Share • Together</p>
-          </div>
-        </div>
+        <!-- New Code (Logo + Deca Chat) -->
+   <div class="logo-area">
+     <img src="/chat.png" alt="DecaChat Logo" class="app-logo-img">
+      <div class="title-area">
+       <h2>Deca Chat</h2>
+       <p>Connect • Share • Together</p>
+     </div>
+   </div>
         <div class="circle-icon-btn" onclick="openNameModal(true)" title="Profile / Name">
           <i class="fa-regular fa-user"></i>
         </div>
